@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedExpert – Medical Diagnosis Expert System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-icon">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="12" y="2" width="4" height="24" rx="2" fill="white"/>
+        <rect x="2" y="12" width="24" height="4" rx="2" fill="white"/>
+        <circle cx="14" cy="14" r="12" stroke="white" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>MedExpert — Medical Diagnosis Expert System</h1>
+      <p>Knowledge-based clinical decision support for rural &amp; remote healthcare workers</p>
+    </div>
+  </div>
+  <div class="disclaimer-banner">
+    ⚠ For educational and support purposes only. Always consult a qualified medical professional for diagnosis and treatment.
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- LEFT PANEL: Knowledge Base Browser -->
+  <div class="panel-left">
+    <div class="card">
+      <div class="card-header">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="var(--teal-mid)"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+        <h2>Knowledge Base</h2>
+      </div>
+      <div class="card-body" id="kb-panel">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL: Diagnosis Wizard -->
+  <div class="panel-right">
+
+    <div class="steps-bar" id="steps-bar">
+      <div class="step-tab active" id="tab1">
+        <span class="step-num">1</span> Patient Info
+      </div>
+      <div class="step-tab" id="tab2">
+        <span class="step-num">2</span> Symptoms
+      </div>
+      <div class="step-tab" id="tab3">
+        <span class="step-num">3</span> Results
+      </div>
+    </div>
+
+    <div class="right-card">
+
+      <!-- STEP 1: Patient Info -->
+      <div class="step-content active" id="step1">
+        <div class="form-row">
+          <label>Patient Name (optional)</label>
+          <input type="text" id="pat-name" placeholder="e.g. John Doe"/>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <div class="form-row" style="flex:1">
+            <label>Age</label>
+            <input type="number" id="pat-age" placeholder="e.g. 32" min="0" max="120"/>
+          </div>
+          <div class="form-row" style="flex:1">
+            <label>Sex</label>
+            <select id="pat-sex">
+              <option value="">Select…</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Duration of Symptoms</label>
+          <select id="pat-duration">
+            <option value="">Select…</option>
+            <option value="Less than 24 hours">Less than 24 hours</option>
+            <option value="1–3 days">1–3 days</option>
+            <option value="4–7 days">4–7 days</option>
+            <option value="1–2 weeks">1–2 weeks</option>
+            <option value="More than 2 weeks">More than 2 weeks</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Location / Setting</label>
+          <select id="pat-location">
+            <option value="rural">Rural / Remote area</option>
+            <option value="urban">Urban area</option>
+            <option value="peri-urban">Peri-urban / Town</option>
+          </select>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goToStep(2)">Continue to Symptoms →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Symptoms -->
+      <div class="step-content" id="step2">
+        <div class="selected-bar">
+          <div class="selected-label">Selected Symptoms</div>
+          <div class="selected-list" id="selected-display">
+            <span class="empty-hint">None selected — tap symptoms below</span>
+          </div>
+        </div>
+
+        <div class="progress-row">
+          <span id="sym-count-text">0 symptoms selected</span>
+          <span id="sym-min-hint" style="color:var(--red);display:none">Select at least 1 symptom</span>
+        </div>
+
+        <div id="symptom-groups"></div>
+
+        <div class="btn-row">
+          <button class="btn btn-outline" onclick="goToStep(1)">← Back</button>
+          <button class="btn btn-primary" id="diagnose-btn" onclick="runDiagnosis()">Diagnose →</button>
+          <button class="btn btn-danger" onclick="clearSymptoms()">Clear All</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Results -->
+      <div class="step-content" id="step3">
+        <div id="results-area"></div>
+        <div class="btn-row">
+          <button class="btn btn-outline" onclick="goToStep(2)">← Revise Symptoms</button>
+          <button class="btn btn-danger" onclick="resetAll()">Start New Diagnosis</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
