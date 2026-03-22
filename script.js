@@ -226,6 +226,134 @@ const KNOWLEDGE_BASE = [
       { level: "urgent", title: "Do NOT give pain medication or laxatives", text: "Avoid giving opioids or laxatives which can mask symptoms and delay diagnosis." },
       { level: "moderate", title: "Monitor closely during transfer", text: "Monitor vital signs during transport. Seek IV access if available. A ruptured appendix is life-threatening." }
     ]
+  },
+  {
+    id: "covid19",
+    name: "COVID-19",
+    severity: "moderate",
+    color: "#5c4ab7",
+    description: "Infectious disease caused by the SARS-CoV-2 coronavirus. Spreads primarily through respiratory droplets. Severity ranges from mild to critical.",
+    core: ["fever","cough","fatigue","loss_of_smell","loss_of_taste"],
+    supporting: ["difficulty_breathing","headache","sore_throat","runny_nose","muscle_pain","chills","diarrhea"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["COVID-19 Rapid Antigen Test (RAT)", "PCR / NAAT test", "Pulse oximetry (oxygen saturation)"],
+    recommendations: [
+      { level: "moderate", title: "Isolate immediately", text: "Patient must isolate for at least 5–10 days from symptom onset to prevent spread. Wear a mask if contact with others is unavoidable." },
+      { level: "moderate", title: "Monitor oxygen levels", text: "Check oxygen saturation with a pulse oximeter. Levels below 94% require urgent medical evaluation." },
+      { level: "mild", title: "Supportive care", text: "Rest, stay well-hydrated, and take paracetamol for fever and pain. Seek emergency care if breathlessness, persistent chest pain, or confusion develops." }
+    ]
+  },
+  {
+    id: "cholera",
+    name: "Cholera",
+    severity: "urgent",
+    color: "#2d6e9e",
+    description: "Acute diarrhoeal infection caused by Vibrio cholerae bacteria. Transmitted through contaminated water or food. Can cause severe dehydration and death within hours if untreated.",
+    core: ["diarrhea","vomiting","dehydration"],
+    supporting: ["muscle_cramps","nausea","weakness"],
+    weight: { core: 2.5, supporting: 1 },
+    tests: ["Stool culture (Vibrio cholerae)", "Rapid cholera dipstick test", "Stool microscopy"],
+    recommendations: [
+      { level: "urgent", title: "Urgent rehydration — life-saving", text: "Immediate oral rehydration with ORS (Oral Rehydration Solution) is critical. Severe cases require IV fluids at a health facility." },
+      { level: "urgent", title: "Refer to health facility", text: "Cholera can be fatal within hours. Refer to the nearest health facility immediately, especially if patient cannot drink or is severely dehydrated." },
+      { level: "moderate", title: "Antibiotic treatment", text: "A single dose of azithromycin or doxycycline reduces illness duration and spread. Administered under medical supervision." }
+    ]
+  },
+  {
+    id: "meningitis",
+    name: "Bacterial Meningitis",
+    severity: "urgent",
+    color: "#8b2252",
+    description: "Life-threatening infection of the membranes surrounding the brain and spinal cord. Bacterial meningitis (e.g. Neisseria meningitidis) progresses rapidly and requires emergency treatment.",
+    core: ["severe_headache","stiff_neck","high_fever"],
+    supporting: ["sensitivity_to_light","confusion","nausea","vomiting","rash"],
+    weight: { core: 3, supporting: 1 },
+    tests: ["Lumbar puncture (cerebrospinal fluid analysis)", "Blood culture", "CT scan head (before LP if signs of raised pressure)", "Full Blood Count (FBC)"],
+    recommendations: [
+      { level: "urgent", title: "EMERGENCY — Call for help immediately", text: "Bacterial meningitis is a medical emergency. Call emergency services or transport patient to hospital immediately. Do not wait." },
+      { level: "urgent", title: "Immediate antibiotic therapy", text: "IV antibiotics (benzylpenicillin / ceftriaxone) must be started immediately — even before confirmation if meningitis is strongly suspected." },
+      { level: "moderate", title: "Isolation and contact tracing", text: "Isolate the patient. Close contacts may need prophylactic antibiotics. Notify public health authorities." }
+    ]
+  },
+  {
+    id: "asthma",
+    name: "Asthma (Acute Attack)",
+    severity: "moderate",
+    color: "#2e7d6e",
+    description: "Chronic inflammatory disease of the airways causing recurrent episodes of wheezing, breathlessness, and chest tightness. Acute attacks can be life-threatening if severe.",
+    core: ["wheezing","shortness_of_breath","chest_pain","cough"],
+    supporting: ["difficulty_breathing","fatigue"],
+    weight: { core: 2.5, supporting: 1 },
+    tests: ["Peak flow meter (PEFR)", "Pulse oximetry", "Clinical auscultation (wheeze)", "Spirometry (non-acute)"],
+    recommendations: [
+      { level: "urgent", title: "Use reliever inhaler immediately", text: "Administer salbutamol (albuterol) via inhaler or nebuliser immediately. Repeat every 20 minutes if needed for moderate-severe attack." },
+      { level: "moderate", title: "Sit upright and stay calm", text: "Position patient sitting upright. Loosen tight clothing. Keep calm — anxiety worsens bronchospasm. Seek emergency care if no improvement after 3 doses." },
+      { level: "mild", title: "Identify and avoid triggers", text: "Common triggers include dust, smoke, cold air, exercise, and allergens. Long-term control requires preventer inhaler and regular medical review." }
+    ]
+  },
+  {
+    id: "gastroenteritis",
+    name: "Acute Gastroenteritis",
+    severity: "moderate",
+    color: "#5a7a2d",
+    description: "Inflammation of the stomach and intestines, usually caused by viral (norovirus, rotavirus) or bacterial infection. Spreads easily through contaminated food, water, or contact.",
+    core: ["diarrhea","vomiting","nausea"],
+    supporting: ["abdominal_pain","fever","weakness","dehydration"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["Clinical diagnosis", "Stool microscopy / culture (if severe or prolonged)", "Electrolyte panel (if severe dehydration)"],
+    recommendations: [
+      { level: "moderate", title: "Oral rehydration therapy", text: "Give ORS (Oral Rehydration Solution) frequently in small sips. Zinc supplementation recommended for children under 5." },
+      { level: "mild", title: "Dietary management", text: "Avoid solid food initially; progress to bland foods (rice, banana, toast). Avoid dairy and fatty foods until recovered." },
+      { level: "moderate", title: "Watch for dehydration signs", text: "Seek urgent care if: unable to keep fluids down, blood in stool, high fever, signs of severe dehydration (sunken eyes, no urine for 8+ hours), or symptoms in infants/elderly." }
+    ]
+  },
+  {
+    id: "hypertensive_crisis",
+    name: "Hypertensive Crisis",
+    severity: "urgent",
+    color: "#b72828",
+    description: "Severely elevated blood pressure (typically >180/120 mmHg) which can cause acute damage to the heart, brain, kidneys, or eyes. Includes hypertensive urgency and emergency.",
+    core: ["severe_headache","blurred_vision","chest_pain"],
+    supporting: ["dizziness","nausea","difficulty_breathing","confusion","rapid_heartbeat"],
+    weight: { core: 2.5, supporting: 1 },
+    tests: ["Blood pressure measurement (sphygmomanometer)", "ECG", "Blood tests: creatinine, electrolytes, FBC", "Urine dipstick (proteinuria)", "Fundoscopy (retinal changes)"],
+    recommendations: [
+      { level: "urgent", title: "Measure blood pressure and refer urgently", text: "If BP is >180/120 mmHg, refer to emergency services immediately. Do not attempt rapid BP lowering outside a clinical setting." },
+      { level: "urgent", title: "Avoid strenuous activity", text: "Keep the patient at rest. Avoid exertion. Do not give extra antihypertensive doses without medical guidance — rapid BP drop is dangerous." },
+      { level: "moderate", title: "Long-term blood pressure control", text: "Following resolution of the crisis, ongoing antihypertensive medication, dietary sodium restriction, and lifestyle modification are essential." }
+    ]
+  },
+  {
+    id: "chickenpox",
+    name: "Chickenpox (Varicella)",
+    severity: "mild",
+    color: "#8b6914",
+    description: "Highly contagious viral infection caused by the varicella-zoster virus. Characterised by an itchy blister-like rash spreading across the body. Usually mild in children but can be severe in adults and immunocompromised patients.",
+    core: ["rash","itching","fever"],
+    supporting: ["fatigue","headache","loss_of_appetite","mild_fever"],
+    weight: { core: 2.5, supporting: 1 },
+    tests: ["Clinical diagnosis (characteristic rash)", "Varicella PCR (if uncertain)", "Tzanck smear (rarely used)"],
+    recommendations: [
+      { level: "mild", title: "Isolate patient until all blisters crust", text: "Chickenpox is highly contagious. Isolate from school, work, and vulnerable individuals (pregnant women, immunocompromised, newborns) until all lesions have crusted — usually 5–7 days after rash onset." },
+      { level: "mild", title: "Relieve itching", text: "Calamine lotion and chlorphenamine (antihistamine) reduce itching. Keep fingernails short to prevent scratching and secondary infection." },
+      { level: "moderate", title: "Watch for complications", text: "Seek medical attention if: high fever, rash near eyes, difficulty breathing, severe headache, or signs of bacterial skin infection (increasing redness, warmth, pus)." }
+    ]
+  },
+  {
+    id: "measles",
+    name: "Measles",
+    severity: "urgent",
+    color: "#c45c14",
+    description: "Highly contagious viral disease caused by the measles virus. Spreads through airborne droplets. Can cause serious complications including pneumonia, encephalitis, and death — particularly in unvaccinated children.",
+    core: ["fever","rash","cough","runny_nose"],
+    supporting: ["sensitivity_to_light","sore_throat","fatigue","eye_pain","headache"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["Clinical diagnosis (Koplik's spots, characteristic rash)", "Measles IgM serology", "Measles PCR (throat/urine swab)", "Notify public health — notifiable disease"],
+    recommendations: [
+      { level: "urgent", title: "Isolate and notify public health", text: "Measles is a notifiable disease. Isolate patient immediately (airborne precautions). Report to the local public health authority for outbreak control." },
+      { level: "urgent", title: "Vitamin A supplementation", text: "WHO recommends vitamin A for all children with measles. This reduces mortality and severity. Give under medical guidance." },
+      { level: "moderate", title: "Supportive care and watch for complications", text: "Ensure hydration and fever management. Monitor for danger signs: difficulty breathing (pneumonia), altered consciousness (encephalitis), or severe eye involvement." }
+    ]
   }
 ];
 
@@ -265,7 +393,8 @@ const SYMPTOM_GROUPS = [
       { id: "sore_throat",         label: "Sore throat" },
       { id: "runny_nose",          label: "Runny / blocked nose" },
       { id: "sneezing",            label: "Sneezing" },
-      { id: "shortness_of_breath", label: "Shortness of breath (exertional)" }
+      { id: "shortness_of_breath", label: "Shortness of breath (exertional)" },
+      { id: "wheezing",            label: "Wheezing / whistling breath" }
     ]
   },
   {
