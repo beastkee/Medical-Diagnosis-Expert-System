@@ -19,6 +19,91 @@ let faSelectedItems   = new Set();
 let voiceSpeaking     = false;
 let speechUtterance   = null;
 
+// Category-specific symptom filtering (default: all symptoms).
+const CATEGORY_SYMPTOM_ALLOWLIST = {
+  neonate: new Set([
+    'fever','high_fever','mild_fever','chills','sweating','fatigue','weakness','dehydration',
+    'cough','difficulty_breathing','runny_nose','sore_throat','wheezing',
+    'vomiting','diarrhea','abdominal_pain','nausea','loss_of_appetite',
+    'jaundice','rash','headache','confusion','rapid_heartbeat'
+  ]),
+  infant: new Set([
+    'fever','high_fever','mild_fever','chills','fatigue','weakness','dehydration',
+    'cough','difficulty_breathing','runny_nose','sore_throat','wheezing','chest_pain',
+    'vomiting','diarrhea','abdominal_pain','nausea','loss_of_appetite',
+    'rash','headache','confusion','rapid_heartbeat'
+  ]),
+  child: new Set([
+    'fever','high_fever','mild_fever','chills','sweating','fatigue','weakness','dehydration',
+    'cough','difficulty_breathing','runny_nose','sore_throat','wheezing','chest_pain',
+    'vomiting','diarrhea','abdominal_pain','nausea','loss_of_appetite','constipation',
+    'rash','headache','severe_headache','stiff_neck','confusion','muscle_pain','joint_pain','rapid_heartbeat'
+  ]),
+  adolescent: new Set([
+    'fever','high_fever','mild_fever','chills','sweating','fatigue','weakness','dehydration',
+    'cough','persistent_cough','difficulty_breathing','runny_nose','sore_throat','wheezing','chest_pain','shortness_of_breath',
+    'vomiting','diarrhea','abdominal_pain','lower_abdominal_pain','nausea','loss_of_appetite','constipation',
+    'headache','severe_headache','stiff_neck','dizziness','confusion','muscle_pain','joint_pain','rash','rapid_heartbeat','weight_loss'
+  ]),
+  pregnant: new Set([
+    'fever','high_fever','mild_fever','chills','fatigue','weakness','dizziness','headache','severe_headache',
+    'cough','difficulty_breathing','chest_pain','shortness_of_breath',
+    'nausea','vomiting','abdominal_pain','lower_abdominal_pain','loss_of_appetite','constipation','heartburn',
+    'burning_urination','frequent_urination','cloudy_urine','blood_in_urine','pelvic_pain',
+    'leg_swelling','high_blood_pressure','rapid_heartbeat','dehydration','rash'
+  ]),
+  lactating: new Set([
+    'fever','high_fever','mild_fever','fatigue','weakness','headache',
+    'cough','sore_throat','runny_nose','difficulty_breathing',
+    'nausea','vomiting','abdominal_pain','loss_of_appetite','diarrhea',
+    'burning_urination','frequent_urination','pelvic_pain','cloudy_urine',
+    'rapid_heartbeat','dehydration','rash'
+  ]),
+  elderly: new Set([
+    'fever','high_fever','mild_fever','chills','fatigue','weakness','dehydration','weight_loss',
+    'cough','persistent_cough','difficulty_breathing','shortness_of_breath','chest_pain','blood_in_cough','wheezing',
+    'headache','severe_headache','dizziness','confusion','stiff_neck',
+    'abdominal_pain','nausea','vomiting','diarrhea','constipation','loss_of_appetite',
+    'burning_urination','frequent_urination','blood_in_urine','flank_pain','dark_urine',
+    'leg_swelling','high_blood_pressure','rapid_heartbeat','pale_skin','blurred_vision','jaundice'
+  ])
+};
+
+const CUSTOM_SYMPTOM_MAP = {
+  'breathless': 'difficulty_breathing',
+  'breathlessness': 'difficulty_breathing',
+  'difficulty breathing': 'difficulty_breathing',
+  'shortness of breath': 'shortness_of_breath',
+  'sob': 'shortness_of_breath',
+  'temperature': 'fever',
+  'hot body': 'fever',
+  'high temperature': 'high_fever',
+  'throwing up': 'vomiting',
+  'loose stool': 'diarrhea',
+  'loose stools': 'diarrhea',
+  'stomach ache': 'abdominal_pain',
+  'belly pain': 'abdominal_pain',
+  'tummy pain': 'abdominal_pain',
+  'chest tightness': 'chest_tightness',
+  'burning urine': 'burning_urination',
+  'painful urination': 'burning_urination',
+  'pain when urinating': 'burning_urination',
+  'passing urine frequently': 'frequent_urination',
+  'frequent pee': 'frequent_urination',
+  'body weakness': 'weakness',
+  'body pains': 'muscle_pain',
+  'joint pains': 'joint_pain',
+  'loss of appetite': 'loss_of_appetite',
+  'not eating': 'loss_of_appetite',
+  'yellow eyes': 'jaundice',
+  'yellow skin': 'jaundice',
+  'swollen legs': 'leg_swelling',
+  'palpitations': 'rapid_heartbeat',
+  'heart racing': 'rapid_heartbeat',
+  'faint': 'dizziness',
+  'light headed': 'dizziness'
+};
+
 // ================================================================
 //  CHRONIC CONDITIONS catalogue
 // ================================================================
@@ -356,6 +441,10 @@ function selCat(value) {
   if (pregrow) pregrow.style.display = showPreg ? '' : 'none';
   if (value === 'pregnant')  { patFlags.pregnant = true;  updToggleRow('tpreg', true); }
   if (value === 'lactating') { patFlags.lactating = true; updToggleRow('tlact', true); }
+  if (value !== 'pregnant')  { patFlags.pregnant = false; updToggleRow('tpreg', false); }
+  if (value !== 'lactating') { patFlags.lactating = false; updToggleRow('tlact', false); }
+  enforceCategorySymptomSelection();
+  renderSymptoms();
 }
 
 function togF(flag) {
@@ -466,14 +555,18 @@ function togChronic(id) {
 function renderSymptoms() {
   const container = document.getElementById('sym-groups');
   if (!container) return;
+  const category = (document.getElementById('cat-select') || {}).value || '';
+  const allowed = CATEGORY_SYMPTOM_ALLOWLIST[category] || null;
   const seen = new Set();
   let html = '';
   SYMPTOM_GROUPS.forEach(function(g) {
     const unique = g.symptoms.filter(function(s) {
+      if (allowed && !allowed.has(s.id)) return false;
       if (seen.has(s.id)) return false;
       seen.add(s.id);
       return true;
     });
+    if (unique.length === 0) return;
     html += '<div class="sym-group"><div class="sgt">' + g.group + '</div><div class="chip-group">';
     unique.forEach(function(s) {
       html += '<button class="chip' + (selectedSymptoms.has(s.id) ? ' on' : '') + '" onclick="toggleSym(\'' + s.id + '\')">' + s.label + '</button>';
@@ -494,7 +587,7 @@ function updateSelDisplay() {
   const seld  = document.getElementById('seld');
   const scnt  = document.getElementById('scnt');
   const swarn = document.getElementById('swarn');
-  const total = selectedSymptoms.size + customSymptoms.length;
+  const total = selectedSymptoms.size + customSymptoms.filter(function(c) { return !c.mappedId; }).length;
   if (scnt)  scnt.textContent = total + ' selected';
   if (swarn) swarn.style.display = 'none';
   if (!seld) return;
@@ -505,9 +598,49 @@ function updateSelDisplay() {
   const tags = Array.from(selectedSymptoms).map(function(id) {
     return '<span class="sel-tag">' + symLabel(id) + '</span>';
   }).concat(customSymptoms.map(function(c) {
+    if (c.mappedId) {
+      return '<span class="sel-tag">' + c.label + ' -> ' + symLabel(c.mappedId) + '</span>';
+    }
     return '<span class="sel-tag">' + c.label + '</span>';
   }));
   seld.innerHTML = tags.join('');
+}
+
+function mapCustomSymptomToKnownId(value) {
+  const norm = value.toLowerCase().trim().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ');
+  if (!norm) return null;
+  if (CUSTOM_SYMPTOM_MAP[norm]) return CUSTOM_SYMPTOM_MAP[norm];
+
+  const allSymptoms = SYMPTOM_GROUPS.flatMap(function(g) { return g.symptoms; });
+  const exact = allSymptoms.find(function(s) {
+    return s.label.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim() === norm;
+  });
+  if (exact) return exact.id;
+
+  const fuzzy = allSymptoms.find(function(s) {
+    const lbl = s.label.toLowerCase();
+    return norm.includes(lbl) || lbl.includes(norm);
+  });
+  return fuzzy ? fuzzy.id : null;
+}
+
+function enforceCategorySymptomSelection() {
+  const category = (document.getElementById('cat-select') || {}).value || '';
+  const allowed = CATEGORY_SYMPTOM_ALLOWLIST[category] || null;
+  if (!allowed) return;
+  selectedSymptoms = new Set(Array.from(selectedSymptoms).filter(function(id) { return allowed.has(id); }));
+}
+
+function getEffectiveSymptomIds() {
+  const category = (document.getElementById('cat-select') || {}).value || '';
+  const allowed = CATEGORY_SYMPTOM_ALLOWLIST[category] || null;
+  const ids = new Set(Array.from(selectedSymptoms));
+  customSymptoms.forEach(function(c) {
+    if (!c.mappedId) return;
+    if (allowed && !allowed.has(c.mappedId)) return;
+    ids.add(c.mappedId);
+  });
+  return Array.from(ids);
 }
 
 function addCS() {
@@ -517,9 +650,15 @@ function addCS() {
   const val = input.value.trim();
   if (!val) return;
   const id = 'custom_' + Date.now();
-  customSymptoms.push({ id: id, label: val });
+  const mappedId = mapCustomSymptomToKnownId(val);
+  if (mappedId) selectedSymptoms.add(mappedId);
+  customSymptoms.push({ id: id, label: val, mappedId: mappedId });
   input.value = '';
-  if (disp) disp.innerHTML += '<span class="chip on" style="cursor:default">' + val + '</span>';
+  if (disp) {
+    const shown = mappedId ? (val + ' -> ' + symLabel(mappedId)) : val;
+    disp.innerHTML += '<span class="chip on" style="cursor:default">' + shown + '</span>';
+  }
+  renderSymptoms();
   updateSelDisplay();
 }
 
@@ -554,7 +693,11 @@ function runDx() {
     if (sw) sw.style.display = 'inline';
     return;
   }
-  const allIds = Array.from(selectedSymptoms).concat(customSymptoms.map(function(c) { return c.id; }));
+  const allIds = getEffectiveSymptomIds();
+  if (allIds.length === 0) {
+    alert('Typed symptoms could not be mapped to known clinical symptoms yet. Please pick at least one symptom chip.');
+    return;
+  }
   const category = (document.getElementById('cat-select') || {}).value || '';
   lastResults  = runInferenceEngine(allIds, {
     category: category,
