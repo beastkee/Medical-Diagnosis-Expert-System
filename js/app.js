@@ -43,7 +43,8 @@ const CATEGORY_SYMPTOM_ALLOWLIST = {
     'fever','high_fever','mild_fever','chills','sweating','fatigue','weakness','dehydration',
     'cough','persistent_cough','difficulty_breathing','runny_nose','sore_throat','wheezing','chest_pain','shortness_of_breath',
     'vomiting','diarrhea','abdominal_pain','lower_abdominal_pain','nausea','loss_of_appetite','constipation',
-    'headache','severe_headache','stiff_neck','dizziness','confusion','muscle_pain','joint_pain','rash','rapid_heartbeat','weight_loss'
+    'headache','severe_headache','stiff_neck','dizziness','confusion','muscle_pain','joint_pain','rash','rapid_heartbeat','weight_loss',
+    'pelvic_pain','vaginal_discharge','abnormal_bleeding','painful_menses','scrotal_pain','testicular_swelling','groin_pain'
   ]),
   pregnant: new Set([
     'fever','high_fever','mild_fever','chills','fatigue','weakness','dizziness','headache','severe_headache',
@@ -65,7 +66,7 @@ const CATEGORY_SYMPTOM_ALLOWLIST = {
     'headache','severe_headache','dizziness','confusion','stiff_neck',
     'abdominal_pain','nausea','vomiting','diarrhea','constipation','loss_of_appetite',
     'burning_urination','frequent_urination','blood_in_urine','flank_pain','dark_urine',
-    'leg_swelling','high_blood_pressure','rapid_heartbeat','pale_skin','blurred_vision','jaundice'
+    'leg_swelling','high_blood_pressure','rapid_heartbeat','pale_skin','blurred_vision','jaundice','urinary_retention'
   ])
 };
 
@@ -101,7 +102,23 @@ const CUSTOM_SYMPTOM_MAP = {
   'palpitations': 'rapid_heartbeat',
   'heart racing': 'rapid_heartbeat',
   'faint': 'dizziness',
-  'light headed': 'dizziness'
+  'light headed': 'dizziness',
+  'vaginal discharge': 'vaginal_discharge',
+  'abnormal discharge': 'vaginal_discharge',
+  'discharge': 'vaginal_discharge',
+  'spotting': 'abnormal_bleeding',
+  'abnormal bleeding': 'abnormal_bleeding',
+  'painful periods': 'painful_menses',
+  'period pain': 'painful_menses',
+  'menstrual cramps': 'painful_menses',
+  'testicular pain': 'scrotal_pain',
+  'scrotal pain': 'scrotal_pain',
+  'swollen testicle': 'testicular_swelling',
+  'groin pain': 'groin_pain',
+  'urine retention': 'urinary_retention',
+  'cant urinate': 'urinary_retention',
+  'difficulty urinating': 'urinary_retention',
+  'weak urine stream': 'urinary_retention'
 };
 
 // ================================================================
@@ -699,8 +716,10 @@ function runDx() {
     return;
   }
   const category = (document.getElementById('cat-select') || {}).value || '';
+  const sex = (document.getElementById('psex') || {}).value || '';
   lastResults  = runInferenceEngine(allIds, {
     category: category,
+    sex: sex,
     flags: Object.assign({}, patFlags),
     chronic: Array.from(chronicSelected)
   });

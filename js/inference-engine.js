@@ -6,8 +6,27 @@
 function runInferenceEngine(symptoms, context = {}) {
   const symSet = new Set(symptoms);
   const category = context.category || "";
+  const sex = (context.sex || "").toLowerCase();
   const chronic = context.chronic || [];
   const flags = context.flags || {};
+
+  const maleOnlyDiseases = new Set([
+    "benign_prostatic_hyperplasia",
+    "prostatitis",
+    "testicular_torsion"
+  ]);
+
+  const femaleOnlyDiseases = new Set([
+    "pelvic_inflammatory_disease",
+    "endometriosis",
+    "ovarian_cyst",
+    "bacterial_vaginosis"
+  ]);
+
+  const sexBoosts = {
+    female: { uti: 1.08, anemia: 1.06, pelvic_inflammatory_disease: 1.18, endometriosis: 1.15, ovarian_cyst: 1.12, bacterial_vaginosis: 1.16 },
+    male: { benign_prostatic_hyperplasia: 1.2, prostatitis: 1.18, testicular_torsion: 1.2, acute_coronary_syndrome: 1.04 }
+  };
 
   const categoryBoosts = {
     neonate: { pneumonia: 1.08, meningitis: 1.1 },
@@ -39,6 +58,9 @@ function runInferenceEngine(symptoms, context = {}) {
   const redFlagHits = Array.from(symSet).filter(s => urgentFlags.has(s)).length;
 
   let scores = KNOWLEDGE_BASE.map(disease => {
+    if (sex === "male" && femaleOnlyDiseases.has(disease.id)) return null;
+    if (sex === "female" && maleOnlyDiseases.has(disease.id)) return null;
+
     let score = 0;
     let maxScore = 0;
     let coreMatched = [];
@@ -72,13 +94,15 @@ function runInferenceEngine(symptoms, context = {}) {
       flagMult *= 1.04;
     }
 
+    const sexMult = (sexBoosts[sex] && sexBoosts[sex][disease.id]) || 1;
+
     // If danger symptoms are present, slightly prioritize urgent conditions.
     let urgencyMult = 1;
     if (disease.severity === "urgent" && redFlagHits > 0) {
       urgencyMult += Math.min(0.15, redFlagHits * 0.04);
     }
 
-    score *= catMult * chronicMult * flagMult * urgencyMult;
+    score *= catMult * chronicMult * flagMult * sexMult * urgencyMult;
 
     const confidence = maxScore > 0 ? (score / maxScore) : 0;
     const absScore = score;

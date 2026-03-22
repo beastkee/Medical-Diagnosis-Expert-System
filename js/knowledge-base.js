@@ -655,6 +655,111 @@ const KNOWLEDGE_BASE = [
       { level: "mild", title: "Supportive care", text: "Hydration, fever control, and skin comfort measures are usually adequate." },
       { level: "moderate", title: "Reassess if red flags", text: "Escalate for persistent high fever, confusion, breathing difficulty, or bleeding signs." }
     ]
+  },
+  {
+    id: "pelvic_inflammatory_disease",
+    name: "Pelvic Inflammatory Disease (PID)",
+    severity: "urgent",
+    color: "#a0396f",
+    description: "Upper genital tract infection in females that can lead to infertility and chronic pelvic pain if untreated.",
+    core: ["pelvic_pain","fever","vaginal_discharge"],
+    supporting: ["lower_abdominal_pain","nausea","abnormal_bleeding","painful_menses"],
+    weight: { core: 2.8, supporting: 1 },
+    tests: ["Pelvic examination", "STI testing", "Pelvic ultrasound"],
+    recommendations: [
+      { level: "urgent", title: "Urgent gynecologic review", text: "Prompt treatment is required to reduce risk of complications and infertility." },
+      { level: "moderate", title: "Start directed therapy promptly", text: "Empiric antimicrobial treatment should be clinician-directed after assessment." }
+    ]
+  },
+  {
+    id: "endometriosis",
+    name: "Endometriosis",
+    severity: "moderate",
+    color: "#8c3d78",
+    description: "Chronic estrogen-dependent inflammatory disease causing cyclical pelvic pain and menstrual symptoms.",
+    core: ["pelvic_pain","painful_menses","lower_abdominal_pain"],
+    supporting: ["fatigue","nausea","abnormal_bleeding"],
+    weight: { core: 2.4, supporting: 1 },
+    tests: ["Clinical assessment", "Pelvic ultrasound", "Laparoscopy (definitive)"],
+    recommendations: [
+      { level: "moderate", title: "Gynecologic follow-up", text: "Requires follow-up for pain control and fertility planning where relevant." },
+      { level: "mild", title: "Pain/symptom tracking", text: "Track cyclical patterns and response to treatment for better management." }
+    ]
+  },
+  {
+    id: "ovarian_cyst",
+    name: "Symptomatic Ovarian Cyst",
+    severity: "moderate",
+    color: "#7b4d92",
+    description: "Fluid-filled ovarian lesion that may cause unilateral pelvic pain and menstrual irregularity.",
+    core: ["pelvic_pain","lower_abdominal_pain","abnormal_bleeding"],
+    supporting: ["nausea","vomiting","bloating"],
+    weight: { core: 2.3, supporting: 1 },
+    tests: ["Pelvic ultrasound", "Pregnancy test", "CBC when indicated"],
+    recommendations: [
+      { level: "moderate", title: "Gynecologic assessment", text: "Needs imaging and follow-up to exclude torsion or rupture." },
+      { level: "urgent", title: "Escalate severe pain", text: "Urgent review if sudden severe pain, syncope, or persistent vomiting occurs." }
+    ]
+  },
+  {
+    id: "bacterial_vaginosis",
+    name: "Bacterial Vaginosis",
+    severity: "mild",
+    color: "#9b4f7e",
+    description: "Common vaginal dysbiosis causing discharge and discomfort; important to assess in pregnancy.",
+    core: ["vaginal_discharge","pelvic_pain","abnormal_bleeding"],
+    supporting: ["burning_urination","lower_abdominal_pain"],
+    weight: { core: 2.1, supporting: 1 },
+    tests: ["Speculum examination", "Vaginal pH/wet mount", "NAAT where available"],
+    recommendations: [
+      { level: "mild", title: "Treat based on evaluation", text: "Therapy should be clinician-directed after confirming likely diagnosis." },
+      { level: "moderate", title: "Review for STI/PID overlap", text: "Escalate if fever, significant pelvic pain, or systemic symptoms are present." }
+    ]
+  },
+  {
+    id: "benign_prostatic_hyperplasia",
+    name: "Benign Prostatic Hyperplasia (BPH)",
+    severity: "moderate",
+    color: "#5f4a7b",
+    description: "Non-malignant enlargement of the prostate causing lower urinary tract symptoms in adult males.",
+    core: ["frequent_urination","urinary_retention","weakness"],
+    supporting: ["burning_urination","cloudy_urine","night_sweats"],
+    weight: { core: 2.2, supporting: 1 },
+    tests: ["Digital rectal exam", "Urinalysis", "PSA where appropriate"],
+    recommendations: [
+      { level: "moderate", title: "Urologic review", text: "Assess symptom burden, post-void residual urine, and treatment options." },
+      { level: "urgent", title: "Escalate retention", text: "Acute urinary retention requires urgent care." }
+    ]
+  },
+  {
+    id: "prostatitis",
+    name: "Prostatitis",
+    severity: "moderate",
+    color: "#6a4c8c",
+    description: "Inflammation or infection of the prostate causing urinary symptoms and pelvic discomfort.",
+    core: ["pelvic_pain","burning_urination","frequent_urination"],
+    supporting: ["fever","weakness","lower_abdominal_pain"],
+    weight: { core: 2.4, supporting: 1 },
+    tests: ["Urinalysis and urine culture", "Prostate examination", "Inflammatory markers"],
+    recommendations: [
+      { level: "moderate", title: "Directed antimicrobial therapy", text: "Treatment is clinician-directed after assessment and culture where possible." },
+      { level: "urgent", title: "Escalate systemic illness", text: "Urgently refer if high fever, rigors, or retention is present." }
+    ]
+  },
+  {
+    id: "testicular_torsion",
+    name: "Testicular Torsion",
+    severity: "urgent",
+    color: "#8a2f4f",
+    description: "Acute spermatic cord twisting causing ischemia; a time-critical surgical emergency.",
+    core: ["scrotal_pain","testicular_swelling","nausea"],
+    supporting: ["vomiting","groin_pain","lower_abdominal_pain"],
+    weight: { core: 3, supporting: 1.2 },
+    tests: ["Urgent physical exam", "Scrotal Doppler ultrasound"],
+    recommendations: [
+      { level: "urgent", title: "Immediate emergency referral", text: "Do not delay. Urgent surgical assessment is needed to preserve testicular viability." },
+      { level: "urgent", title: "Time-critical action", text: "Greatest salvage chance is within hours from onset of severe pain." }
+    ]
   }
 ];
 
@@ -744,7 +849,14 @@ const SYMPTOM_GROUPS = [
       { id: "dark_urine",          label: "Dark urine (tea-colored)" },
       { id: "blood_in_urine",     label: "Blood in urine" },
       { id: "flank_pain",          label: "Flank / side pain" },
-      { id: "pelvic_pain",        label: "Pelvic pain" }
+      { id: "pelvic_pain",        label: "Pelvic pain" },
+      { id: "vaginal_discharge",  label: "Abnormal vaginal discharge" },
+      { id: "abnormal_bleeding",  label: "Abnormal vaginal bleeding" },
+      { id: "painful_menses",     label: "Painful menstrual cramps" },
+      { id: "scrotal_pain",       label: "Scrotal pain" },
+      { id: "testicular_swelling",label: "Testicular swelling" },
+      { id: "groin_pain",         label: "Groin pain" },
+      { id: "urinary_retention",  label: "Difficulty passing urine / retention" }
     ]
   },
   {
