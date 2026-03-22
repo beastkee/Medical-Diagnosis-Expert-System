@@ -137,6 +137,22 @@ const CHRONIC_CONDITIONS = [
   { id: 'malaria_hx',     label: 'History of Malaria' },
 ];
 
+const SEX_SPECIFIC_DISEASE_LABELS = {
+  pelvic_inflammatory_disease: 'Female-specific',
+  endometriosis: 'Female-specific',
+  ovarian_cyst: 'Female-specific',
+  bacterial_vaginosis: 'Female-specific',
+  benign_prostatic_hyperplasia: 'Male-specific',
+  prostatitis: 'Male-specific',
+  testicular_torsion: 'Male-specific'
+};
+
+function getSexSpecificBadge(diseaseId) {
+  const label = SEX_SPECIFIC_DISEASE_LABELS[diseaseId];
+  if (!label) return '';
+  return '<span class="sex-spec-tag">' + label + '</span>';
+}
+
 // ================================================================
 //  CONTEXT WARNINGS (pregnancy / pediatric / elderly / lactation)
 // ================================================================
@@ -767,7 +783,7 @@ function renderResults(results) {
     const ctxWarnings = getDiseaseWarnings(r.disease.id);
     html += '<div class="diag-card ' + (isPrimary ? 'diag-primary' : 'diag-secondary') + '">' +
       '<div class="diag-rank">' + (rankLabel[i] || 'Possible') + ' \u00B7 <span style="color:' + sevColor[sev] + '">' + sev.charAt(0).toUpperCase() + sev.slice(1) + ' severity</span></div>' +
-      '<div class="diag-name">' + r.disease.name + '</div>' +
+      '<div class="diag-name">' + r.disease.name + getSexSpecificBadge(r.disease.id) + '</div>' +
       '<div class="conf-wrap"><div class="conf-bar" style="width:' + pct + '%"></div></div>' +
       '<div style="font-size:12px;color:var(--muted);margin-bottom:7px">Confidence: <strong>' + pct + '%</strong> \u00B7 ' + r.coreMatched.length + ' core + ' + r.supMatched.length + ' supporting matched</div>' +
       '<div style="margin-bottom:7px">' +
