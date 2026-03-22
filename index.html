@@ -6,143 +6,344 @@
 <title>MedExpert – Medical Diagnosis Expert System</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#085041">
+<title>MedExpert — Clinical Decision Support</title>
+<style>
+:root{
+  --bg:#f0f4f3;--surface:#fff;--surface2:#f8faf9;
+  --teal:#0c7a5e;--teal-l:#e1f5ee;--teal-m:#1d9e75;--teal-d:#085041;
+  --text:#1a2520;--muted:#4a6058;--hint:#7a9b8e;
+  --border:rgba(12,122,94,.15);--border2:rgba(12,122,94,.3);
+  --red:#d85a30;--red-l:#faece7;--amber:#ba7517;--amber-l:#faeeda;
+  --green:#3b6d11;--green-l:#eaf3de;--blue:#185fa5;--blue-l:#e6f1fb;
+  --purple:#534ab7;--purple-l:#eeedfe;
+  --shadow:0 2px 16px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+header{background:var(--teal-d)}
+.hdr-inner{max-width:1100px;margin:0 auto;padding:18px 20px 14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{width:44px;height:44px;background:var(--teal-m);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo svg{width:24px;height:24px}
+.hdr-text h1{font-size:20px;color:#fff;font-weight:700}
+.hdr-text p{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+.disclaimer{background:rgba(0,0,0,.2);text-align:center;font-size:11px;color:rgba(255,255,255,.65);padding:5px 16px}
+.mode-nav{background:var(--teal-d);border-top:1px solid rgba(255,255,255,.1)}
+.mode-nav-inner{max-width:1100px;margin:0 auto;display:flex}
+.mode-btn{padding:10px 22px;font-size:13px;font-weight:600;color:rgba(255,255,255,.6);background:transparent;border:none;cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;transition:.2s}
+.mode-btn.active{color:#fff;border-bottom-color:var(--teal-m)}
+.units-toggle{display:flex;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;margin-left:auto}
+.unit-opt{padding:5px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.6);cursor:pointer;transition:.15s}
+.unit-opt.active{background:var(--teal-m);color:#fff}
+.main{max-width:1100px;margin:0 auto;padding:22px 16px 60px;display:flex;gap:18px;align-items:flex-start}
+.panel-left{flex:0 0 290px}
+.panel-right{flex:1 1 0;min-width:0}
+.card{background:var(--surface);border-radius:16px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.card-hdr{padding:13px 17px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
+.card-hdr h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal-d)}
+.card-body{padding:14px 16px}
+.steps-bar{display:flex;background:var(--surface);border-radius:16px 16px 0 0;border:1px solid var(--border);border-bottom:none;overflow:hidden}
+.step-tab{flex:1;text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--hint);border-bottom:3px solid transparent;user-select:none;transition:.2s}
+.step-tab.active{color:var(--teal);border-bottom-color:var(--teal-m);background:var(--teal-l);font-weight:700}
+.step-tab.done{color:var(--teal-m);border-bottom-color:var(--teal-m)}
+.sn{display:inline-flex;width:15px;height:15px;border-radius:50%;background:var(--hint);color:#fff;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-right:3px;vertical-align:middle}
+.step-tab.active .sn{background:var(--teal-m)}
+.step-tab.done .sn{background:var(--green)}
+.right-card{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 16px 16px;box-shadow:var(--shadow)}
+.step-content{padding:18px 20px;display:none}
+.step-content.active{display:block}
+.form-row{margin-bottom:11px}
+.form-row label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:8px 11px;border-radius:9px;border:1px solid var(--border2);font-size:13px;font-family:inherit;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--teal-m)}
+.form-row textarea{resize:vertical;min-height:58px}
+.form-row .hint{font-size:11px;color:var(--hint);margin-top:2px}
+.row2{display:flex;gap:9px}
+.row2>.form-row{flex:1}
+.toggle-row{display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:9px;border:1px solid var(--border);margin-bottom:7px;cursor:pointer;transition:.15s}
+.toggle-row:hover{border-color:var(--border2)}
+.toggle-row.on{background:var(--teal-l);border-color:var(--teal-m)}
+.tdot{width:34px;height:18px;border-radius:9px;background:#ccc;position:relative;flex-shrink:0;transition:.2s}
+.tdot::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.2s}
+.toggle-row.on .tdot{background:var(--teal-m)}
+.toggle-row.on .tdot::after{left:18px}
+.toggle-label{font-size:13px;flex:1}
+.chip-group{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;border:1px solid var(--border2);font-size:12px;color:var(--muted);cursor:pointer;transition:.15s;user-select:none;background:var(--surface);font-family:inherit}
+.chip:hover{border-color:var(--teal-m);color:var(--teal);background:var(--teal-l)}
+.chip.on{background:var(--teal-m);border-color:var(--teal-m);color:#fff}
+.chronic-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px}
+.sym-group{margin-bottom:13px}
+.sgt{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--hint);margin-bottom:6px}
+.sel-bar{background:var(--teal-l);border:1px solid var(--border2);border-radius:11px;padding:9px 13px;margin-bottom:12px;min-height:46px}
+.sel-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-d);margin-bottom:4px}
+.sel-tags{display:flex;flex-wrap:wrap;gap:4px}
+.sel-tag{background:var(--teal-d);color:#fff;font-size:11px;padding:2px 8px;border-radius:999px}
+.eh{font-size:12px;color:var(--hint);font-style:italic}
+.csr{display:flex;gap:7px;margin-top:9px}
+.csr input{flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;border:none;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:.18s}
+.btn-p{background:var(--teal-m);color:#fff}
+.btn-p:hover{background:var(--teal)}
+.btn-p:disabled{background:#b0ccc6;cursor:not-allowed}
+.btn-o{background:transparent;color:var(--teal);border:1px solid var(--border2)}
+.btn-o:hover{background:var(--teal-l)}
+.btn-d{background:var(--red-l);color:var(--red);border:1px solid rgba(216,90,48,.2)}
+.btn-d:hover{background:#f5c4b3}
+.btn-a{background:var(--amber-l);color:var(--amber);border:1px solid rgba(186,117,23,.2)}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.kb-disease{display:flex;align-items:flex-start;gap:7px;padding:6px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.kb-disease:last-child{border-bottom:none}
+.kb-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.kb-name{font-size:12px;font-weight:600}
+.kb-syms{font-size:10px;color:var(--hint);line-height:1.5;margin-top:1px}
+.sev-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:999px;margin-left:4px;text-transform:uppercase;letter-spacing:.05em;vertical-align:middle}
+.sev-urgent{background:var(--red-l);color:var(--red)}
+.sev-moderate{background:var(--amber-l);color:var(--amber)}
+.sev-mild{background:var(--green-l);color:var(--green)}
+.demo-badge{display:inline-block;font-size:9px;font-weight:600;padding:1px 6px;border-radius:999px;background:var(--purple-l);color:var(--purple);margin-left:4px;vertical-align:middle}
+.pat-summary{background:var(--teal-l);border:1px solid var(--border2);border-radius:9px;padding:9px 13px;margin-bottom:13px;font-size:12px;color:var(--teal-d)}
+.diag-card{border-radius:13px;border:2px solid transparent;padding:13px 15px;margin-bottom:11px}
+.diag-primary{background:var(--teal-l);border-color:var(--teal-m)}
+.diag-secondary{background:var(--surface2);border-color:var(--border)}
+.diag-rank{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.diag-primary .diag-rank{color:var(--teal-d)}
+.diag-secondary .diag-rank{color:var(--hint)}
+.diag-name{font-size:20px;font-weight:700;margin-bottom:4px}
+.diag-primary .diag-name{color:var(--teal-d)}
+.conf-wrap{background:rgba(0,0,0,.07);border-radius:999px;height:5px;margin-bottom:9px;overflow:hidden}
+.conf-bar{height:100%;border-radius:999px}
+.diag-primary .conf-bar{background:var(--teal-m)}
+.diag-secondary .conf-bar{background:var(--hint)}
+.match-chip{display:inline-block;padding:2px 7px;border-radius:999px;font-size:11px;margin:2px}
+.diag-primary .match-chip{background:rgba(12,122,94,.15);color:var(--teal-d)}
+.diag-secondary .match-chip{background:rgba(0,0,0,.06);color:var(--muted)}
+.drug-card{background:var(--blue-l);border:1px solid rgba(24,95,165,.2);border-radius:11px;padding:11px 13px;margin-bottom:7px}
+.drug-name{font-size:13px;font-weight:700;color:var(--blue)}
+.drug-detail{font-size:12px;color:var(--muted);margin-top:3px}
+.drug-ci{font-size:11px;color:var(--red);margin-top:3px;font-weight:600}
+.rec-card{border-radius:9px;padding:11px 13px;margin-bottom:7px;border-left:4px solid transparent}
+.rec-urgent{background:var(--red-l);border-color:var(--red)}
+.rec-moderate{background:var(--amber-l);border-color:var(--amber)}
+.rec-mild{background:var(--green-l);border-color:var(--green)}
+.rec-title{font-size:12px;font-weight:700;margin-bottom:3px}
+.rec-urgent .rec-title{color:var(--red)}
+.rec-moderate .rec-title{color:var(--amber)}
+.rec-mild .rec-title{color:var(--green)}
+.rec-text{font-size:12px;color:var(--muted)}
+.test-entry{background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:12px 14px;margin-bottom:9px}
+.ten{font-size:13px;font-weight:600;margin-bottom:7px}
+.test-options{display:flex;gap:7px;flex-wrap:wrap}
+.test-opt{padding:5px 12px;border-radius:999px;border:1px solid var(--border2);font-size:12px;cursor:pointer;transition:.15s;background:var(--surface);font-family:inherit;font-weight:500}
+.test-opt.positive{background:#e24b4a;color:#fff;border-color:#e24b4a}
+.test-opt.negative{background:var(--green);color:#fff;border-color:var(--green)}
+.test-opt.inconclusive{background:var(--amber);color:#fff;border-color:var(--amber)}
+.sdiv{height:1px;background:var(--border);margin:14px 0}
+.sh{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--hint);margin-bottom:9px}
+.ub{background:#fcebeb;border:2px solid #e24b4a;border-radius:9px;padding:11px 13px;margin-top:11px}
+.ub-t{font-size:12px;font-weight:700;color:#a32d2d;margin-bottom:2px}
+.ub-b{font-size:12px;color:#791f1f}
+.nm{text-align:center;padding:36px 18px;color:var(--hint);font-size:13px}
+.cat-banner{border-radius:10px;padding:9px 13px;margin-bottom:13px;display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600}
+.cat-banner.preg{background:#fdf0f8;border:1px solid rgba(180,80,160,.25);color:#7a3070}
+.cat-banner.eld{background:#f0f4f8;border:1px solid rgba(80,100,160,.25);color:#303878}
+.cat-banner.neo{background:#fff8e6;border:1px solid rgba(186,117,23,.3);color:#6b4200}
+.cat-banner.ped{background:#e8f8f0;border:1px solid rgba(29,158,117,.3);color:#085041}
+.feat-block{background:var(--teal-l);border:1px solid var(--border2);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.feat-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-d);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.feat-icon{font-size:14px}
+.sym-other{margin-top:13px}
+.sym-other-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--hint);margin-bottom:10px;padding-top:10px;border-top:1px solid var(--border)}
+.fa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:9px;margin-bottom:18px}
+.fa-btn{background:var(--surface);border:1px solid var(--border2);border-radius:13px;padding:15px 11px;text-align:center;cursor:pointer;transition:.2s;font-family:inherit}
+.fa-btn:hover,.fa-btn.selected{border-color:var(--teal-m);background:var(--teal-l)}
+.fa-icon{font-size:28px;margin-bottom:7px}
+.fa-label{font-size:12px;font-weight:600}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:6px}
+.item-btn{background:var(--surface);border:1px solid var(--border2);border-radius:9px;padding:8px 9px;text-align:center;cursor:pointer;transition:.15s;font-family:inherit}
+.item-btn:hover{border-color:var(--teal-m);background:var(--teal-l)}
+.item-btn.on{background:var(--teal-m);border-color:var(--teal-m);color:#fff}
+.item-label{font-size:12px;font-weight:500}
+.fa-step{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:11px 14px;margin-bottom:9px;display:flex;align-items:flex-start;gap:11px}
+.fa-step.critical{border-color:var(--red);background:var(--red-l)}
+.fa-step.warning{border-color:var(--amber);background:var(--amber-l)}
+.fa-sn{width:27px;height:27px;border-radius:50%;background:var(--teal-d);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.fa-step.critical .fa-sn{background:var(--red)}
+.fa-step-text{font-size:13px;line-height:1.6}
+.fa-step-sub{font-size:11px;color:var(--hint);margin-top:2px}
+.vbtn{display:flex;align-items:center;gap:7px;padding:9px 17px;background:var(--purple-l);color:var(--purple);border:1px solid rgba(83,74,183,.2);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.vbtn:hover{background:#dedcfb}
+.vbtn.speaking{background:var(--purple);color:#fff}
+@media(max-width:700px){.main{flex-direction:column}.panel-left{display:none}.fa-grid{grid-template-columns:repeat(2,1fr)}.cat-grid{grid-template-columns:repeat(2,1fr)}}
+@media print{
+  body>*:not(#parea){display:none!important}
+  #parea{display:block!important;font-family:Arial,sans-serif;font-size:12px;max-width:800px;margin:0 auto;padding:20px}
+  .pr-hdr{border-bottom:3px solid #085041;padding-bottom:10px;margin-bottom:14px}
+  .pr-title{font-size:22px;font-weight:700;color:#085041}
+  .pr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;font-size:12px;margin-bottom:12px}
+  .pr-lbl{color:#666}
+  .pr-diag{background:#e1f5ee;border:2px solid #1d9e75;border-radius:8px;padding:10px 14px;margin-bottom:10px}
+  .pr-dname{font-size:20px;font-weight:700;color:#085041}
+  .pr-drug{background:#e6f1fb;border:1px solid #b5d4f4;border-radius:6px;padding:8px 12px;margin-bottom:6px}
+  .pr-ddn{font-weight:700;color:#185fa5}
+  .pr-sign{border:2px solid #ccc;border-radius:8px;padding:16px;margin-top:18px}
+  .pr-sline{border-bottom:1px solid #000;margin:20px 0 4px;height:0}
+  .pr-disc{font-size:10px;color:#999;border-top:1px solid #eee;padding-top:7px;margin-top:14px}
+}
+</style>
 </head>
 <body>
-
+<div id="parea" style="display:none"></div>
 <header>
-  <div class="header-inner">
-    <div class="logo-icon">
-      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="12" y="2" width="4" height="24" rx="2" fill="white"/>
-        <rect x="2" y="12" width="24" height="4" rx="2" fill="white"/>
-        <circle cx="14" cy="14" r="12" stroke="white" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/>
-      </svg>
+  <div class="hdr-inner">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="10" y="2" width="4" height="20" rx="2" fill="white"/><rect x="2" y="10" width="20" height="4" rx="2" fill="white"/></svg>
     </div>
-    <div class="header-text">
-      <h1>MedExpert — Medical Diagnosis Expert System</h1>
-      <p>Knowledge-based clinical decision support for rural &amp; remote healthcare workers</p>
+    <div class="hdr-text">
+      <h1>MedExpert — Clinical Decision Support</h1>
+      <p>Universal first-response diagnosis &amp; emergency first aid · 60+ conditions</p>
+    </div>
+    <div class="units-toggle">
+      <div class="unit-opt active" id="u-metric" onclick="setU('metric')">Metric</div>
+      <div class="unit-opt" id="u-imperial" onclick="setU('imperial')">Imperial</div>
     </div>
   </div>
-  <div class="disclaimer-banner">
-    ⚠ For educational and support purposes only. Always consult a qualified medical professional for diagnosis and treatment.
-  </div>
+  <div class="disclaimer">⚠ Clinical decision support only. Always consult a qualified medical professional. Not a substitute for professional medical advice.</div>
+  <div class="mode-nav"><div class="mode-nav-inner">
+    <button class="mode-btn active" id="btn-dx" onclick="setMode('dx')">🏥 Clinical Diagnosis</button>
+    <button class="mode-btn" id="btn-fa" onclick="setMode('fa')">🚨 Emergency First Aid</button>
+  </div></div>
 </header>
-
 <div class="main">
-
-  <!-- LEFT PANEL: Knowledge Base Browser -->
   <div class="panel-left">
     <div class="card">
-      <div class="card-header">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="var(--teal-mid)"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
-        <h2>Knowledge Base</h2>
-      </div>
-      <div class="card-body" id="kb-panel">
-        <!-- rendered by JS -->
-      </div>
+      <div class="card-hdr"><h2>Knowledge Base (<span id="kbc">0</span> conditions)</h2></div>
+      <div class="card-body" id="kb-panel" style="max-height:72vh;overflow-y:auto"></div>
     </div>
   </div>
-
-  <!-- RIGHT PANEL: Diagnosis Wizard -->
   <div class="panel-right">
-
-    <div class="steps-bar" id="steps-bar">
-      <div class="step-tab active" id="tab1">
-        <span class="step-num">1</span> Patient Info
+    <div id="dx-mode">
+      <div class="steps-bar">
+        <div class="step-tab active" id="t1"><span class="sn">1</span>Patient</div>
+        <div class="step-tab" id="t2"><span class="sn">2</span>Symptoms</div>
+        <div class="step-tab" id="t3"><span class="sn">3</span>Results</div>
+        <div class="step-tab" id="t4"><span class="sn">4</span>Report</div>
       </div>
-      <div class="step-tab" id="tab2">
-        <span class="step-num">2</span> Symptoms
-      </div>
-      <div class="step-tab" id="tab3">
-        <span class="step-num">3</span> Results
+      <div class="right-card">
+        <div class="step-content active" id="s1">
+          <div class="row2">
+            <div class="form-row" style="flex:2">
+              <label>Patient Category</label>
+              <select id="cat-select" onchange="selCat(this.value)">
+                <option value="">— Select category —</option>
+                <option value="neonate">🍼 Newborn (0–28 days)</option>
+                <option value="infant">👶 Infant (1–12 months)</option>
+                <option value="child">🧒 Child (1–12 years)</option>
+                <option value="adolescent">🧑 Adolescent (13–17 years)</option>
+                <option value="adult">👤 Adult (18–64 years)</option>
+                <option value="elderly">👴 Elderly (65+ years)</option>
+                <option value="pregnant">🤰 Pregnant</option>
+                <option value="lactating">🤱 Breastfeeding / Lactating</option>
+              </select>
+            </div>
+          </div>
+          <div id="cat-banner" style="display:none"></div>
+          <div class="row2">
+            <div class="form-row"><label>Patient Name</label><input type="text" id="pname" placeholder="e.g. John Doe"/></div>
+            <div class="form-row"><label>Clinic / Facility</label><input type="text" id="pclinic" placeholder="e.g. District Clinic"/></div>
+          </div>
+          <div class="row2">
+            <div class="form-row"><label>Age (years)</label><input type="number" id="page" placeholder="e.g. 35" min="0" max="120" oninput="updAge()"/><div class="hint" id="ageh"></div></div>
+            <div class="form-row"><label>Weight</label><input type="number" id="pwt" placeholder="—" min="0"/><div class="hint" id="wth">kg</div></div>
+            <div class="form-row"><label>Sex</label><select id="psex"><option value="">Select</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
+          </div>
+          <div class="row2">
+            <div class="form-row"><label>Duration</label><select id="pdur"><option value="">—</option><option>&lt;24 hours</option><option>1–3 days</option><option>4–7 days</option><option>1–2 weeks</option><option>&gt;2 weeks</option></select></div>
+            <div class="form-row"><label>Setting</label><select id="pset"><option value="rural">Rural / Remote</option><option value="urban">Urban</option><option value="peri">Peri-urban</option><option value="workplace">Workplace</option><option value="school">School</option><option value="travel">Travelling</option></select></div>
+          </div>
+          <div class="form-row" id="pregrow" style="display:none"><label>Pregnancy / Maternal</label>
+            <div class="toggle-row" id="tpreg" onclick="togF('pregnant')"><div class="tdot"></div><span class="toggle-label">Currently pregnant</span></div>
+            <div class="toggle-row" id="tlact" onclick="togF('lactating')"><div class="tdot"></div><span class="toggle-label">Breastfeeding / Lactating</span></div>
+          </div>
+          <div class="form-row"><label>Chronic Conditions</label><div class="chronic-grid" id="chron-grid"></div></div>
+          <div class="form-row"><label>Additional Notes</label><textarea id="pnotes" placeholder="Allergies, current meds, recent travel..."></textarea></div>
+          <div class="btn-row"><button class="btn btn-p" onclick="goStep(2)">Continue to Symptoms →</button></div>
+        </div>
+        <div class="step-content" id="s2">
+          <div class="sel-bar"><div class="sel-label">Selected Symptoms</div><div class="sel-tags" id="seld"><span class="eh">Tap symptoms below</span></div></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:9px">
+            <span style="font-size:12px;color:var(--hint)" id="scnt">0 selected</span>
+            <span style="font-size:11px;color:var(--red);display:none" id="swarn">Select at least 1</span>
+          </div>
+          <div id="sym-groups"></div>
+          <div class="sdiv"></div>
+          <div class="sh">Add Unlisted Symptom</div>
+          <div class="csr"><input type="text" id="csi" placeholder="Type symptom not in list..."/><button class="btn btn-o btn-sm" onclick="addCS()">Add</button></div>
+          <div id="csd" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px"></div>
+          <div class="btn-row">
+            <button class="btn btn-o" onclick="goStep(1)">← Back</button>
+            <button class="btn btn-p" onclick="runDx()">Diagnose →</button>
+            <button class="btn btn-d btn-sm" onclick="clrSym()">Clear</button>
+          </div>
+        </div>
+        <div class="step-content" id="s3">
+          <div id="res-area"></div>
+          <div class="sdiv"></div>
+          <div id="test-sec" style="display:none">
+            <div class="sh">Enter Test Results — Pass 2 Confirmation</div>
+            <div id="test-list"></div>
+            <div class="btn-row"><button class="btn btn-p" onclick="runP2()">Update Diagnosis with Results →</button></div>
+            <div class="sdiv"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-o" onclick="goStep(2)">← Revise</button>
+            <button class="btn btn-p" onclick="goStep(4)">Generate Report →</button>
+            <button class="btn btn-d btn-sm" onclick="resetAll()">New</button>
+          </div>
+        </div>
+        <div class="step-content" id="s4">
+          <div id="rpt-preview"></div>
+          <div class="btn-row">
+            <button class="btn btn-o" onclick="goStep(3)">← Back</button>
+            <button class="btn btn-p" onclick="doPrint()">🖨 Print / Save PDF</button>
+            <button class="btn btn-a" onclick="doWA()">📱 WhatsApp</button>
+            <button class="btn btn-o" onclick="doShare()">↗ Share</button>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="right-card">
-
-      <!-- STEP 1: Patient Info -->
-      <div class="step-content active" id="step1">
-        <div class="form-row">
-          <label>Patient Name (optional)</label>
-          <input type="text" id="pat-name" placeholder="e.g. John Doe"/>
-        </div>
-        <div style="display:flex;gap:12px;">
-          <div class="form-row" style="flex:1">
-            <label>Age</label>
-            <input type="number" id="pat-age" placeholder="e.g. 32" min="0" max="120"/>
-          </div>
-          <div class="form-row" style="flex:1">
-            <label>Sex</label>
-            <select id="pat-sex">
-              <option value="">Select…</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <label>Duration of Symptoms</label>
-          <select id="pat-duration">
-            <option value="">Select…</option>
-            <option value="Less than 24 hours">Less than 24 hours</option>
-            <option value="1–3 days">1–3 days</option>
-            <option value="4–7 days">4–7 days</option>
-            <option value="1–2 weeks">1–2 weeks</option>
-            <option value="More than 2 weeks">More than 2 weeks</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>Location / Setting</label>
-          <select id="pat-location">
-            <option value="rural">Rural / Remote area</option>
-            <option value="urban">Urban area</option>
-            <option value="peri-urban">Peri-urban / Town</option>
-          </select>
-        </div>
-        <div class="btn-row">
-          <button class="btn btn-primary" onclick="goToStep(2)">Continue to Symptoms →</button>
-        </div>
-      </div>
-
-      <!-- STEP 2: Symptoms -->
-      <div class="step-content" id="step2">
-        <div class="selected-bar">
-          <div class="selected-label">Selected Symptoms</div>
-          <div class="selected-list" id="selected-display">
-            <span class="empty-hint">None selected — tap symptoms below</span>
+    <div id="fa-mode" style="display:none">
+      <div class="card">
+        <div class="card-hdr"><h2>🚨 Emergency First Aid — Select Emergency Type</h2></div>
+        <div class="card-body">
+          <div id="fa-s1"><div style="font-size:13px;color:var(--muted);margin-bottom:13px">What is happening? Select the emergency:</div><div class="fa-grid" id="fa-grid"></div></div>
+          <div id="fa-s2" style="display:none">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:13px">
+              <button class="btn btn-o btn-sm" onclick="faBack()">← Back</button>
+              <span style="font-size:15px;font-weight:700" id="fa-title"></span>
+            </div>
+            <div class="sh">What do you have available? (check all that apply)</div>
+            <div class="items-grid" id="items-grid"></div>
+            <div class="btn-row" style="margin-bottom:14px">
+              <button class="btn btn-p" onclick="showFASteps()">Show First Aid Steps →</button>
+              <button class="btn btn-o" onclick="faAll()">Select All Items</button>
+            </div>
+            <div id="fa-steps"></div>
+            <div id="fa-voice" style="display:none;margin-top:11px">
+              <button class="vbtn" id="vbtn" onclick="togVoice()">🔊 Read Steps Aloud (Offline)</button>
+              <div style="font-size:11px;color:var(--hint);margin-top:4px">Uses device built-in speech. No internet needed.</div>
+            </div>
+            <div id="fa-handoff" style="display:none;margin-top:14px">
+              <div class="sdiv"></div>
+              <div style="font-size:12px;color:var(--muted);margin-bottom:7px">Patient stabilised — document the encounter:</div>
+              <button class="btn btn-o" onclick="setMode('dx')">→ Continue to Clinical Diagnosis</button>
+            </div>
           </div>
         </div>
-
-        <div class="progress-row">
-          <span id="sym-count-text">0 symptoms selected</span>
-          <span id="sym-min-hint" style="color:var(--red);display:none">Select at least 1 symptom</span>
-        </div>
-
-        <div id="symptom-groups"></div>
-
-        <div class="btn-row">
-          <button class="btn btn-outline" onclick="goToStep(1)">← Back</button>
-          <button class="btn btn-primary" id="diagnose-btn" onclick="runDiagnosis()">Diagnose →</button>
-          <button class="btn btn-danger" onclick="clearSymptoms()">Clear All</button>
-        </div>
       </div>
-
-      <!-- STEP 3: Results -->
-      <div class="step-content" id="step3">
-        <div id="results-area"></div>
-        <div class="btn-row">
-          <button class="btn btn-outline" onclick="goToStep(2)">← Revise Symptoms</button>
-          <button class="btn btn-danger" onclick="resetAll()">Start New Diagnosis</button>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>
-
-<script src="js/knowledge-base.js"></script>
-<script src="js/inference-engine.js"></script>
-<script src="js/app.js"></script>
-</body>
-</html>
+<script>
