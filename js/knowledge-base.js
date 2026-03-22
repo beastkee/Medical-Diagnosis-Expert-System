@@ -370,6 +370,291 @@ const KNOWLEDGE_BASE = [
       { level: "urgent", title: "Urgent referral criteria", text: "Refer urgently if fever, anuria, persistent vomiting, or uncontrolled pain is present." },
       { level: "mild", title: "Follow-up and prevention", text: "Advise adequate fluid intake and follow-up for recurrence prevention." }
     ]
+  },
+  {
+    id: "bronchitis",
+    name: "Acute Bronchitis",
+    severity: "mild",
+    color: "#2f7ca1",
+    description: "Inflammation of the bronchi, usually viral, causing cough and chest discomfort.",
+    core: ["cough","sore_throat","fatigue"],
+    supporting: ["mild_fever","chest_pain","runny_nose","sneezing"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["Clinical diagnosis", "Chest X-ray if pneumonia is suspected"],
+    recommendations: [
+      { level: "mild", title: "Supportive care", text: "Rest, hydration, and symptomatic relief are usually sufficient." },
+      { level: "moderate", title: "Monitor for worsening", text: "Refer if high fever, breathlessness, or persistent symptoms develop." }
+    ]
+  },
+  {
+    id: "allergic_rhinitis",
+    name: "Allergic Rhinitis",
+    severity: "mild",
+    color: "#6a63b8",
+    description: "Allergic inflammation of the nasal passages causing sneezing, runny nose, and eye irritation.",
+    core: ["sneezing","runny_nose","eye_pain"],
+    supporting: ["sore_throat","headache","fatigue"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["Clinical diagnosis", "Allergy testing where available"],
+    recommendations: [
+      { level: "mild", title: "Allergen avoidance", text: "Reduce exposure to likely triggers such as dust, pollen, and smoke." },
+      { level: "mild", title: "Symptom control", text: "Use antihistamines or intranasal therapy under clinician guidance." }
+    ]
+  },
+  {
+    id: "acute_sinusitis",
+    name: "Acute Sinusitis",
+    severity: "moderate",
+    color: "#4a7a92",
+    description: "Inflammation of paranasal sinuses causing facial discomfort, nasal congestion, and headache.",
+    core: ["headache","runny_nose","sore_throat"],
+    supporting: ["cough","mild_fever","fatigue"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["Clinical diagnosis", "Imaging only in complicated disease"],
+    recommendations: [
+      { level: "moderate", title: "Conservative management", text: "Hydration, analgesics, and saline rinses are first-line in uncomplicated cases." },
+      { level: "moderate", title: "Escalate if prolonged/severe", text: "Refer when fever persists, pain is severe, or symptoms last beyond expected course." }
+    ]
+  },
+  {
+    id: "pharyngitis",
+    name: "Acute Pharyngitis",
+    severity: "moderate",
+    color: "#7a4b8f",
+    description: "Inflammation of the throat causing soreness and painful swallowing, often viral but can be bacterial.",
+    core: ["sore_throat","fever","headache"],
+    supporting: ["cough","runny_nose","fatigue"],
+    weight: { core: 2.1, supporting: 1 },
+    tests: ["Clinical assessment", "Rapid strep test where indicated"],
+    recommendations: [
+      { level: "moderate", title: "Assess bacterial features", text: "Evaluate for likely streptococcal infection before antibiotic use." },
+      { level: "mild", title: "Symptomatic care", text: "Hydration, rest, and pain/fever relief are usually effective." }
+    ]
+  },
+  {
+    id: "food_poisoning",
+    name: "Food Poisoning",
+    severity: "moderate",
+    color: "#8f5f2a",
+    description: "Acute gastrointestinal illness from contaminated food or water, often causing vomiting and diarrhea.",
+    core: ["vomiting","diarrhea","abdominal_pain"],
+    supporting: ["nausea","fever","dehydration","weakness"],
+    weight: { core: 2.2, supporting: 1 },
+    tests: ["Clinical diagnosis", "Stool testing if severe or prolonged"],
+    recommendations: [
+      { level: "moderate", title: "Rehydrate early", text: "Start oral rehydration immediately and monitor urine output." },
+      { level: "urgent", title: "Refer for severe dehydration", text: "Escalate for persistent vomiting, confusion, or inability to maintain oral intake." }
+    ]
+  },
+  {
+    id: "gastritis",
+    name: "Gastritis",
+    severity: "mild",
+    color: "#9a6a3a",
+    description: "Inflammation of stomach lining causing epigastric discomfort, nausea, and dyspepsia symptoms.",
+    core: ["epigastric_pain","nausea","heartburn"],
+    supporting: ["vomiting","loss_of_appetite","bloating"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["Clinical assessment", "H. pylori testing if persistent"],
+    recommendations: [
+      { level: "mild", title: "Trigger reduction", text: "Avoid irritants such as alcohol, tobacco, and non-essential NSAIDs." },
+      { level: "moderate", title: "Medical review if persistent", text: "Refer for ongoing pain, weight loss, or alarm symptoms." }
+    ]
+  },
+  {
+    id: "constipation_disorder",
+    name: "Constipation Disorder",
+    severity: "mild",
+    color: "#7d6f59",
+    description: "Functional bowel slowing causing hard stools, reduced stool frequency, and abdominal discomfort.",
+    core: ["constipation","abdominal_pain","bloating"],
+    supporting: ["loss_of_appetite","nausea"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["Clinical diagnosis", "Further workup if red flags present"],
+    recommendations: [
+      { level: "mild", title: "Lifestyle first", text: "Increase fluid, fiber, and activity as tolerated." },
+      { level: "moderate", title: "Escalate when red flags appear", text: "Refer urgently for blood in stool, severe pain, vomiting, or weight loss." }
+    ]
+  },
+  {
+    id: "irritable_bowel_syndrome",
+    name: "Irritable Bowel Syndrome",
+    severity: "mild",
+    color: "#6e5d4f",
+    description: "Functional gastrointestinal disorder with recurrent abdominal pain and altered bowel habits.",
+    core: ["abdominal_pain","bloating","diarrhea"],
+    supporting: ["constipation","nausea","fatigue"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["Clinical criteria", "Exclude alarm pathology"],
+    recommendations: [
+      { level: "mild", title: "Diet and symptom diary", text: "Track triggers and consider individualized diet modifications." },
+      { level: "moderate", title: "Rule out danger signs", text: "Refer for anemia, weight loss, GI bleeding, or persistent fever." }
+    ]
+  },
+  {
+    id: "acute_kidney_injury",
+    name: "Acute Kidney Injury",
+    severity: "urgent",
+    color: "#475c88",
+    description: "Rapid decline in kidney function requiring urgent evaluation and correction of causes.",
+    core: ["dark_urine","leg_swelling","fatigue"],
+    supporting: ["nausea","vomiting","weakness","high_blood_pressure"],
+    weight: { core: 2.7, supporting: 1 },
+    tests: ["Serum creatinine and urea", "Urinalysis", "Electrolytes"],
+    recommendations: [
+      { level: "urgent", title: "Urgent renal assessment", text: "Refer immediately for laboratory confirmation and cause-directed treatment." },
+      { level: "urgent", title: "Monitor fluid status", text: "Assess urine output and avoid nephrotoxic medications unless essential." }
+    ]
+  },
+  {
+    id: "chronic_kidney_disease",
+    name: "Chronic Kidney Disease",
+    severity: "moderate",
+    color: "#4d6287",
+    description: "Progressive long-term kidney dysfunction often associated with hypertension and diabetes.",
+    core: ["fatigue","leg_swelling","high_blood_pressure"],
+    supporting: ["frequent_urination","dark_urine","weakness"],
+    weight: { core: 2.3, supporting: 1 },
+    tests: ["eGFR and serum creatinine", "Urine albumin/protein", "Renal ultrasound"],
+    recommendations: [
+      { level: "moderate", title: "Long-term follow-up", text: "Needs regular renal monitoring and risk-factor control." },
+      { level: "moderate", title: "Optimize comorbidities", text: "Control blood pressure and glucose with clinician guidance." }
+    ]
+  },
+  {
+    id: "liver_cirrhosis",
+    name: "Liver Cirrhosis",
+    severity: "urgent",
+    color: "#8f6d1e",
+    description: "Chronic liver scarring causing progressive liver failure and systemic complications.",
+    core: ["jaundice","fatigue","leg_swelling"],
+    supporting: ["abdominal_pain","loss_of_appetite","weakness","dark_urine"],
+    weight: { core: 2.6, supporting: 1 },
+    tests: ["Liver function tests", "Ultrasound abdomen", "Coagulation profile"],
+    recommendations: [
+      { level: "urgent", title: "Urgent specialist review", text: "Requires prompt evaluation for decompensation and complications." },
+      { level: "moderate", title: "Avoid liver toxins", text: "Avoid alcohol and unnecessary hepatotoxic drugs." }
+    ]
+  },
+  {
+    id: "pancreatitis",
+    name: "Acute Pancreatitis",
+    severity: "urgent",
+    color: "#a75c2d",
+    description: "Inflammatory condition of the pancreas that may rapidly progress to severe systemic illness.",
+    core: ["abdominal_pain","vomiting","nausea"],
+    supporting: ["fever","rapid_heartbeat","weakness","loss_of_appetite"],
+    weight: { core: 2.7, supporting: 1 },
+    tests: ["Serum amylase/lipase", "Liver profile", "Abdominal imaging"],
+    recommendations: [
+      { level: "urgent", title: "Urgent referral", text: "Requires urgent medical assessment and fluid resuscitation planning." },
+      { level: "moderate", title: "Monitor complications", text: "Watch for shock, respiratory distress, and persistent vomiting." }
+    ]
+  },
+  {
+    id: "sepsis",
+    name: "Sepsis (Suspected)",
+    severity: "urgent",
+    color: "#a22d2d",
+    description: "Life-threatening organ dysfunction from dysregulated response to infection.",
+    core: ["high_fever","rapid_heartbeat","confusion"],
+    supporting: ["weakness","difficulty_breathing","chills","fatigue"],
+    weight: { core: 3, supporting: 1.2 },
+    tests: ["CBC and inflammatory markers", "Blood cultures", "Serum lactate"],
+    recommendations: [
+      { level: "urgent", title: "Emergency management", text: "Immediate referral for sepsis protocol and early antimicrobial treatment." },
+      { level: "urgent", title: "Do not delay escalation", text: "Any deterioration in consciousness or breathing requires urgent emergency response." }
+    ]
+  },
+  {
+    id: "pulmonary_embolism",
+    name: "Pulmonary Embolism (Possible)",
+    severity: "urgent",
+    color: "#8c2d52",
+    description: "Potentially fatal blockage of pulmonary arteries causing acute chest symptoms and breathlessness.",
+    core: ["shortness_of_breath","chest_pain","rapid_heartbeat"],
+    supporting: ["cough","blood_in_cough","dizziness","fatigue"],
+    weight: { core: 2.9, supporting: 1.1 },
+    tests: ["D-dimer", "CT pulmonary angiography", "Pulse oximetry"],
+    recommendations: [
+      { level: "urgent", title: "Emergency referral", text: "Suspected PE needs urgent emergency evaluation and imaging." },
+      { level: "urgent", title: "Monitor oxygenation", text: "Assess respiratory status continuously while arranging urgent transfer." }
+    ]
+  },
+  {
+    id: "acute_coronary_syndrome",
+    name: "Acute Coronary Syndrome (Possible)",
+    severity: "urgent",
+    color: "#8b1f1f",
+    description: "Acute myocardial ischemia that may present with chest pain, dyspnea, and autonomic symptoms.",
+    core: ["chest_pain","shortness_of_breath","sweating"],
+    supporting: ["nausea","rapid_heartbeat","fatigue","dizziness"],
+    weight: { core: 3, supporting: 1.1 },
+    tests: ["ECG", "Cardiac troponin", "Serial clinical assessment"],
+    recommendations: [
+      { level: "urgent", title: "Emergency protocol", text: "Treat as a cardiac emergency and arrange immediate transfer." },
+      { level: "urgent", title: "Time-critical care", text: "Do not delay ECG and definitive evaluation." }
+    ]
+  },
+  {
+    id: "bronchiolitis",
+    name: "Bronchiolitis",
+    severity: "moderate",
+    color: "#356fa0",
+    description: "Lower respiratory viral illness in infants/young children causing cough, wheeze, and breathing difficulty.",
+    core: ["cough","wheezing","difficulty_breathing"],
+    supporting: ["runny_nose","mild_fever","fatigue"],
+    weight: { core: 2.4, supporting: 1 },
+    tests: ["Clinical diagnosis", "Pulse oximetry"],
+    recommendations: [
+      { level: "moderate", title: "Supportive pediatric care", text: "Monitor feeding, hydration, and breathing effort closely." },
+      { level: "urgent", title: "Escalate for respiratory distress", text: "Urgently refer for chest retractions, apnea, or poor feeding." }
+    ]
+  },
+  {
+    id: "pleural_effusion",
+    name: "Pleural Effusion",
+    severity: "moderate",
+    color: "#4b5f89",
+    description: "Fluid accumulation in pleural space causing dyspnea, cough, and chest discomfort.",
+    core: ["shortness_of_breath","chest_pain","cough"],
+    supporting: ["fatigue","high_fever","difficulty_breathing"],
+    weight: { core: 2.4, supporting: 1 },
+    tests: ["Chest X-ray", "Ultrasound chest", "Pleural fluid analysis"],
+    recommendations: [
+      { level: "moderate", title: "Investigate cause", text: "Needs imaging and directed evaluation for infectious, cardiac, or malignant causes." },
+      { level: "urgent", title: "Urgent referral if unstable", text: "Escalate urgently if hypoxia or severe respiratory distress is present." }
+    ]
+  },
+  {
+    id: "leptospirosis",
+    name: "Leptospirosis",
+    severity: "urgent",
+    color: "#6a5f2d",
+    description: "Bacterial zoonotic infection that can cause fever, myalgia, headache, and jaundice in severe cases.",
+    core: ["high_fever","headache","muscle_pain"],
+    supporting: ["jaundice","vomiting","weakness","chills"],
+    weight: { core: 2.5, supporting: 1 },
+    tests: ["Leptospira serology", "PCR where available", "Liver and renal profile"],
+    recommendations: [
+      { level: "urgent", title: "Early treatment referral", text: "Suspected leptospirosis needs prompt assessment and antimicrobial therapy." },
+      { level: "moderate", title: "Monitor organ involvement", text: "Track renal and hepatic function due to risk of severe disease." }
+    ]
+  },
+  {
+    id: "viral_exanthem",
+    name: "Viral Exanthem",
+    severity: "mild",
+    color: "#7b5ea5",
+    description: "Generalized rash illness with viral features, commonly self-limited but requires danger-sign screening.",
+    core: ["rash","fever","fatigue"],
+    supporting: ["runny_nose","sore_throat","headache"],
+    weight: { core: 2, supporting: 1 },
+    tests: ["Clinical diagnosis", "Targeted viral tests when indicated"],
+    recommendations: [
+      { level: "mild", title: "Supportive care", text: "Hydration, fever control, and skin comfort measures are usually adequate." },
+      { level: "moderate", title: "Reassess if red flags", text: "Escalate for persistent high fever, confusion, breathing difficulty, or bleeding signs." }
+    ]
   }
 ];
 

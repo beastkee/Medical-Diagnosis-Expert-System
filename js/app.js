@@ -321,6 +321,14 @@ function setMode(mode) {
   if (!isDx) renderFA();
 }
 
+function toggleKBPanel() {
+  const hidden = document.body.classList.toggle('kb-hidden');
+  const btn = document.getElementById('kb-toggle');
+  if (!btn) return;
+  btn.textContent = hidden ? 'Show Knowledge Base' : 'Hide Knowledge Base';
+  btn.classList.toggle('active', !hidden);
+}
+
 // ================================================================
 //  PATIENT CATEGORY
 // ================================================================
@@ -955,4 +963,10 @@ document.addEventListener('DOMContentLoaded', function() {
   renderChronicGrid();
   renderSymptoms();
   setU('metric');
+  const btn = document.getElementById('kb-toggle');
+  if (btn) {
+    const hidden = document.body.classList.contains('kb-hidden');
+    btn.textContent = hidden ? 'Show Knowledge Base' : 'Hide Knowledge Base';
+    btn.classList.toggle('active', !hidden);
+  }
 });
