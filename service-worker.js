@@ -1,4 +1,4 @@
-const CACHE_NAME = 'medexpert-v1';
+const CACHE_NAME = 'medexpert-v2-20260322';
 const APP_SHELL = [
   './',
   './index.html',
@@ -34,21 +34,29 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
+  const url = new URL(event.request.url);
+  const isSameOrigin = url.origin === self.location.origin;
 
-      return fetch(event.request)
-        .then((response) => {
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-          return response;
+  if (!isSameOrigin) {
+    return;
+  }
+
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+        return response;
+      })
+      .catch(() =>
+        caches.match(event.request).then((cached) => {
+          if (cached) {
+            return cached;
+          }
+          return caches.match('./index.html');
         })
-        .catch(() => caches.match('./index.html'));
-    })
+      )
   );
 });
