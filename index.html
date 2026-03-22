@@ -172,7 +172,7 @@ header{background:var(--teal-d)}
 .vbtn{display:flex;align-items:center;gap:7px;padding:9px 17px;background:var(--purple-l);color:var(--purple);border:1px solid rgba(83,74,183,.2);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
 .vbtn:hover{background:#dedcfb}
 .vbtn.speaking{background:var(--purple);color:#fff}
-@media(max-width:700px){.main{flex-direction:column}.panel-left{display:none}.fa-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.main{flex-direction:column}.panel-left{display:none}.fa-grid{grid-template-columns:repeat(2,1fr)}.cat-grid{grid-template-columns:repeat(2,1fr)}}
 @media print{
   body>*:not(#parea){display:none!important}
   #parea{display:block!important;font-family:Arial,sans-serif;font-size:12px;max-width:800px;margin:0 auto;padding:20px}
@@ -185,6 +185,7 @@ header{background:var(--teal-d)}
   .pr-drug{background:#e6f1fb;border:1px solid #b5d4f4;border-radius:6px;padding:8px 12px;margin-bottom:6px}
   .pr-ddn{font-weight:700;color:#185fa5}
   .pr-sign{border:2px solid #ccc;border-radius:8px;padding:16px;margin-top:18px}
+  .pr-sline{border-bottom:1px solid #000;margin:20px 0 4px;height:0}
   .pr-disc{font-size:10px;color:#999;border-top:1px solid #eee;padding-top:7px;margin-top:14px}
 }
 </style>
@@ -198,7 +199,7 @@ header{background:var(--teal-d)}
     </div>
     <div class="hdr-text">
       <h1>MedExpert — Clinical Decision Support</h1>
-      <p>Universal first-response diagnosis &amp; emergency first aid · 40+ conditions</p>
+      <p>Universal first-response diagnosis &amp; emergency first aid · 60+ conditions</p>
     </div>
     <div class="units-toggle">
       <div class="unit-opt active" id="u-metric" onclick="setU('metric')">Metric</div>
