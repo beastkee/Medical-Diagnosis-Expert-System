@@ -257,6 +257,7 @@ function updAge() {
   const hint = document.getElementById('ageh');
   if (!hint) return;
   if (isNaN(age) || age < 0) { hint.textContent = ''; return; }
+  // 0.077 years ≈ 28 days (newborn threshold)
   if (age < 0.077)      hint.textContent = 'Newborn (0–28 days)';
   else if (age < 1)     hint.textContent = 'Infant (<1 year)';
   else if (age < 13)    hint.textContent = 'Child';
@@ -414,9 +415,9 @@ function clrSym() {
 //  HELPER — symptom label lookup
 // ================================================================
 function symLabel(id) {
-  for (var i = 0; i < SYMPTOM_GROUPS.length; i++) {
-    var g = SYMPTOM_GROUPS[i];
-    for (var j = 0; j < g.symptoms.length; j++) {
+  for (let i = 0; i < SYMPTOM_GROUPS.length; i++) {
+    const g = SYMPTOM_GROUPS[i];
+    for (let j = 0; j < g.symptoms.length; j++) {
       if (g.symptoms[j].id === id) return g.symptoms[j].label;
     }
   }
@@ -514,14 +515,14 @@ function renderTestSection(results) {
   const tests = results[0].disease.tests;
   if (!tests || tests.length === 0) { sec.style.display = 'none'; return; }
   let html = '';
-  tests.forEach(function(t) {
+  tests.forEach(function(t, idx) {
     const cur = testResults[t] || '';
-    html += '<div class="test-entry">' +
+    html += '<div class="test-entry" data-test-idx="' + idx + '">' +
       '<div class="ten">' + t + '</div>' +
       '<div class="test-options">' +
-      '<button class="test-opt' + (cur==='positive'?' positive':'') + '" onclick="setTest(\'' + t.replace(/'/g,"\\'") + '\',\'positive\')">Positive</button>' +
-      '<button class="test-opt' + (cur==='negative'?' negative':'') + '" onclick="setTest(\'' + t.replace(/'/g,"\\'") + '\',\'negative\')">Negative</button>' +
-      '<button class="test-opt' + (cur==='inconclusive'?' inconclusive':'') + '" onclick="setTest(\'' + t.replace(/'/g,"\\'") + '\',\'inconclusive\')">Inconclusive</button>' +
+      '<button class="test-opt' + (cur==='positive'?' positive':'') + '" onclick="setTestByIdx(' + idx + ',\'positive\')">Positive</button>' +
+      '<button class="test-opt' + (cur==='negative'?' negative':'') + '" onclick="setTestByIdx(' + idx + ',\'negative\')">Negative</button>' +
+      '<button class="test-opt' + (cur==='inconclusive'?' inconclusive':'') + '" onclick="setTestByIdx(' + idx + ',\'inconclusive\')">Inconclusive</button>' +
       '</div></div>';
   });
   list.innerHTML = html;
@@ -530,6 +531,14 @@ function renderTestSection(results) {
 
 function setTest(test, result) {
   testResults[test] = result;
+  renderTestSection(lastResults);
+}
+
+function setTestByIdx(idx, result) {
+  const tests = lastResults.length > 0 ? lastResults[0].disease.tests : [];
+  if (idx >= 0 && idx < tests.length) {
+    testResults[tests[idx]] = result;
+  }
   renderTestSection(lastResults);
 }
 
@@ -593,7 +602,7 @@ function buildReport() {
     '</div>';
   if (chronicSelected.size) {
     const chLabels = Array.from(chronicSelected).map(function(id) {
-      var c = CHRONIC_CONDITIONS.find(function(x) { return x.id === id; });
+      const c = CHRONIC_CONDITIONS.find(function(x) { return x.id === id; });
       return c ? c.label : id;
     });
     html += '<div style="font-size:12px;margin-bottom:12px"><span style="color:var(--hint)">Chronic conditions: </span>' + chLabels.join(', ') + '</div>';
@@ -705,23 +714,30 @@ function faSelectType(id) {
   document.getElementById('fa-handoff').style.display = 'none';
   const grid = document.getElementById('items-grid');
   let html = '';
-  faCurrentType.items.forEach(function(item) {
-    html += '<div class="item-btn" onclick="faToggleItem(\'' + item.replace(/'/g,"\\'") + '\')">' +
+  faCurrentType.items.forEach(function(item, idx) {
+    html += '<div class="item-btn" onclick="faToggleItemByIdx(' + idx + ')">' +
       '<div class="item-label">' + item + '</div></div>';
   });
   grid.innerHTML = html;
 }
 
-function faToggleItem(item) {
+function faToggleItemByIdx(idx) {
+  if (!faCurrentType || idx < 0 || idx >= faCurrentType.items.length) return;
+  const item = faCurrentType.items[idx];
   if (faSelectedItems.has(item)) faSelectedItems.delete(item);
   else faSelectedItems.add(item);
-  if (!faCurrentType) return;
   const grid = document.getElementById('items-grid');
   if (!grid) return;
   const btns = grid.querySelectorAll('.item-btn');
   faCurrentType.items.forEach(function(itm, i) {
     if (btns[i]) btns[i].classList.toggle('on', faSelectedItems.has(itm));
   });
+}
+
+function faToggleItem(item) {
+  if (!faCurrentType) return;
+  const idx = faCurrentType.items.indexOf(item);
+  if (idx !== -1) faToggleItemByIdx(idx);
 }
 
 function faAll() {
@@ -737,7 +753,7 @@ function showFASteps() {
   if (!stepsDiv) return;
   let html = '';
   faCurrentType.steps.forEach(function(step) {
-    var cls = step.level === 'critical' ? ' critical' : (step.level === 'warning' ? ' warning' : '');
+    const cls = step.level === 'critical' ? ' critical' : (step.level === 'warning' ? ' warning' : '');
     html += '<div class="fa-step' + cls + '">' +
       '<div class="fa-sn">' + step.num + '</div>' +
       '<div><div class="fa-step-text">' + step.text + '</div>' +
@@ -792,10 +808,10 @@ function resetAll() {
   lastResults     = [];
   testResults     = {};
   ['pname','pclinic','page','pwt','pnotes','csi'].forEach(function(id) {
-    var el = document.getElementById(id); if (el) el.value = '';
+    const el = document.getElementById(id); if (el) el.value = '';
   });
   ['psex','pdur','pset','cat-select'].forEach(function(id) {
-    var el = document.getElementById(id); if (el) el.selectedIndex = 0;
+    const el = document.getElementById(id); if (el) el.selectedIndex = 0;
   });
   const banner = document.getElementById('cat-banner');
   if (banner) banner.style.display = 'none';
