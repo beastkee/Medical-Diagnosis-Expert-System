@@ -226,6 +226,150 @@ const KNOWLEDGE_BASE = [
       { level: "urgent", title: "Do NOT give pain medication or laxatives", text: "Avoid giving opioids or laxatives which can mask symptoms and delay diagnosis." },
       { level: "moderate", title: "Monitor closely during transfer", text: "Monitor vital signs during transport. Seek IV access if available. A ruptured appendix is life-threatening." }
     ]
+  },
+  {
+    id: "gastroenteritis",
+    name: "Acute Gastroenteritis",
+    severity: "moderate",
+    color: "#1a7d74",
+    description: "Inflammation of the stomach and intestines, commonly caused by viral or bacterial infection. Main risk is dehydration.",
+    core: ["diarrhea","vomiting","abdominal_pain"],
+    supporting: ["nausea","fever","dehydration","muscle_cramps","weakness"],
+    weight: { core: 2.2, supporting: 1 },
+    tests: ["Stool microscopy/culture (if severe)", "Serum electrolytes", "Clinical dehydration assessment"],
+    recommendations: [
+      { level: "moderate", title: "Rehydrate aggressively", text: "Start oral rehydration solution (ORS) immediately. Use frequent small sips if vomiting is present." },
+      { level: "moderate", title: "Monitor dehydration danger signs", text: "Escalate care if reduced urine, sunken eyes, lethargy, persistent vomiting, or inability to drink develops." },
+      { level: "mild", title: "Diet and hygiene", text: "Resume light diet as tolerated and maintain strict hand hygiene to reduce transmission." }
+    ]
+  },
+  {
+    id: "asthma_exacerbation",
+    name: "Asthma Exacerbation",
+    severity: "urgent",
+    color: "#1260a8",
+    description: "Acute worsening of airway inflammation and bronchospasm. Severe attacks can lead to respiratory failure.",
+    core: ["difficulty_breathing","wheezing","chest_tightness","cough"],
+    supporting: ["fatigue","rapid_heartbeat","chest_pain"],
+    weight: { core: 2.6, supporting: 1 },
+    tests: ["Peak Expiratory Flow (PEF)", "Pulse oximetry", "Arterial blood gas (if severe)"],
+    recommendations: [
+      { level: "urgent", title: "Immediate bronchodilator therapy", text: "Administer inhaled short-acting beta-agonist promptly (e.g., salbutamol/albuterol)." },
+      { level: "urgent", title: "Emergency referral if severe", text: "If speech is limited, oxygen saturation is low, or symptoms persist after reliever treatment, refer urgently." },
+      { level: "moderate", title: "Trigger control and follow-up", text: "Review inhaler technique, adherence, and triggers. Arrange follow-up to optimize long-term control." }
+    ]
+  },
+  {
+    id: "hepatitis",
+    name: "Acute Hepatitis",
+    severity: "urgent",
+    color: "#8a6b12",
+    description: "Inflammation of the liver due to viral, toxic, or drug-related causes. Requires laboratory evaluation and monitoring.",
+    core: ["jaundice","fatigue","loss_of_appetite"],
+    supporting: ["nausea","vomiting","abdominal_pain","weakness","dark_urine"],
+    weight: { core: 2.4, supporting: 1 },
+    tests: ["Liver function tests (ALT/AST, bilirubin)", "Hepatitis serology", "Coagulation profile (INR)"],
+    recommendations: [
+      { level: "urgent", title: "Prompt medical assessment", text: "Refer for urgent evaluation to identify cause and assess severity of liver injury." },
+      { level: "moderate", title: "Avoid hepatotoxic substances", text: "Avoid alcohol and unnecessary medications, especially high-dose acetaminophen/paracetamol." },
+      { level: "moderate", title: "Hydration and monitoring", text: "Monitor for red flags such as confusion, bleeding tendency, severe vomiting, or worsening jaundice." }
+    ]
+  },
+  {
+    id: "hypertension",
+    name: "Hypertension (Symptomatic)",
+    severity: "moderate",
+    color: "#8a3a2a",
+    description: "Persistently elevated blood pressure; may be asymptomatic or present with headache, dizziness, and visual symptoms.",
+    core: ["high_blood_pressure","headache","dizziness"],
+    supporting: ["blurred_vision","chest_pain","rapid_heartbeat","fatigue"],
+    weight: { core: 2.3, supporting: 1 },
+    tests: ["Repeated blood pressure measurements", "Renal profile", "ECG"],
+    recommendations: [
+      { level: "moderate", title: "Confirm blood pressure readings", text: "Repeat BP measurements after rest and use appropriate cuff size before confirming diagnosis." },
+      { level: "moderate", title: "Assess for end-organ symptoms", text: "Urgently escalate if severe chest pain, neurologic deficits, or visual loss develops." },
+      { level: "mild", title: "Lifestyle modification", text: "Reduce salt intake, maintain healthy weight, increase activity, and avoid tobacco use." }
+    ]
+  },
+  {
+    id: "heart_failure",
+    name: "Heart Failure (Possible Decompensation)",
+    severity: "urgent",
+    color: "#9b2d2d",
+    description: "Failure of the heart to pump effectively, causing fluid congestion and reduced tissue perfusion.",
+    core: ["shortness_of_breath","fatigue","leg_swelling"],
+    supporting: ["rapid_heartbeat","chest_pain","weakness","cough"],
+    weight: { core: 2.7, supporting: 1 },
+    tests: ["Chest X-ray", "ECG", "Echocardiography", "BNP/NT-proBNP"],
+    recommendations: [
+      { level: "urgent", title: "Urgent cardiovascular assessment", text: "Patients with breathlessness at rest, cyanosis, or severe edema need urgent medical evaluation." },
+      { level: "moderate", title: "Fluid and salt review", text: "Review fluid intake and dietary sodium; monitor daily weight if possible." },
+      { level: "moderate", title: "Medication optimization", text: "A clinician should review and optimize diuretics and guideline-directed therapy." }
+    ]
+  },
+  {
+    id: "migraine",
+    name: "Migraine",
+    severity: "mild",
+    color: "#4d58a8",
+    description: "Primary headache disorder characterized by recurrent throbbing headaches often with nausea and light sensitivity.",
+    core: ["severe_headache","sensitivity_to_light","nausea"],
+    supporting: ["vomiting","dizziness","blurred_vision"],
+    weight: { core: 2.1, supporting: 1 },
+    tests: ["Clinical diagnosis", "Neuroimaging if red flags are present"],
+    recommendations: [
+      { level: "mild", title: "Acute symptom control", text: "Use early analgesia and rest in a dark, quiet room." },
+      { level: "moderate", title: "Screen for warning signs", text: "Urgently evaluate if sudden worst headache, focal deficits, fever, or neck stiffness occurs." },
+      { level: "mild", title: "Trigger management", text: "Track common triggers such as sleep deprivation, stress, dehydration, or specific foods." }
+    ]
+  },
+  {
+    id: "measles",
+    name: "Measles",
+    severity: "urgent",
+    color: "#b25512",
+    description: "Highly contagious viral illness with fever, cough, coryza, conjunctival irritation, and characteristic rash.",
+    core: ["high_fever","rash","cough","runny_nose"],
+    supporting: ["sore_throat","fatigue","eye_pain","loss_of_appetite"],
+    weight: { core: 2.4, supporting: 1 },
+    tests: ["Measles IgM serology", "PCR where available", "Clinical case definition"],
+    recommendations: [
+      { level: "urgent", title: "Isolate immediately", text: "Measles spreads rapidly. Isolate patient and notify relevant public health channels per local policy." },
+      { level: "moderate", title: "Supportive management", text: "Hydration, antipyretics, and close monitoring for complications like pneumonia or encephalitis." },
+      { level: "moderate", title: "Assess contact immunization status", text: "Review vaccination status of close contacts and provide guidance per local protocols." }
+    ]
+  },
+  {
+    id: "peptic_ulcer",
+    name: "Peptic Ulcer Disease",
+    severity: "moderate",
+    color: "#7a4f1f",
+    description: "Ulceration in the stomach or duodenum, commonly associated with H. pylori infection or NSAID use.",
+    core: ["epigastric_pain","nausea","heartburn"],
+    supporting: ["abdominal_pain","bloating","loss_of_appetite","vomiting"],
+    weight: { core: 2.2, supporting: 1 },
+    tests: ["H. pylori stool antigen or urea breath test", "Upper GI endoscopy (if alarm features)"] ,
+    recommendations: [
+      { level: "moderate", title: "Acid suppression", text: "Consider proton pump inhibitor therapy under clinician guidance." },
+      { level: "moderate", title: "Identify and treat H. pylori", text: "Where confirmed, eradication therapy is recommended by a clinician." },
+      { level: "urgent", title: "Escalate for bleeding signs", text: "Urgently refer if vomiting blood, black stools, severe persistent pain, or syncope is present." }
+    ]
+  },
+  {
+    id: "kidney_stone",
+    name: "Renal Colic (Kidney Stone)",
+    severity: "moderate",
+    color: "#5d4aa3",
+    description: "Painful urinary tract stone disease, often presenting with flank pain, nausea, and blood in urine.",
+    core: ["flank_pain","blood_in_urine","nausea"],
+    supporting: ["vomiting","frequent_urination","burning_urination","lower_abdominal_pain"],
+    weight: { core: 2.3, supporting: 1 },
+    tests: ["Urinalysis", "Renal ultrasound", "Non-contrast CT KUB (when available)"],
+    recommendations: [
+      { level: "moderate", title: "Pain and hydration management", text: "Provide analgesia and oral hydration if tolerated; monitor urine output." },
+      { level: "urgent", title: "Urgent referral criteria", text: "Refer urgently if fever, anuria, persistent vomiting, or uncontrolled pain is present." },
+      { level: "mild", title: "Follow-up and prevention", text: "Advise adequate fluid intake and follow-up for recurrence prevention." }
+    ]
   }
 ];
 
@@ -262,6 +406,8 @@ const SYMPTOM_GROUPS = [
       { id: "blood_in_cough",      label: "Blood in cough / sputum" },
       { id: "difficulty_breathing",label: "Difficulty breathing / breathlessness" },
       { id: "chest_pain",          label: "Chest pain" },
+      { id: "chest_tightness",     label: "Chest tightness" },
+      { id: "wheezing",            label: "Wheezing" },
       { id: "sore_throat",         label: "Sore throat" },
       { id: "runny_nose",          label: "Runny / blocked nose" },
       { id: "sneezing",            label: "Sneezing" },
@@ -277,6 +423,9 @@ const SYMPTOM_GROUPS = [
       { id: "abdominal_pain",     label: "Abdominal / stomach pain" },
       { id: "lower_abdominal_pain",label:"Lower abdominal pain" },
       { id: "abdominal_tenderness",label:"Abdominal tenderness (touch-sensitive)" },
+      { id: "epigastric_pain",     label: "Upper central abdominal (epigastric) pain" },
+      { id: "heartburn",           label: "Heartburn / acid reflux" },
+      { id: "bloating",            label: "Abdominal bloating" },
       { id: "loss_of_appetite",   label: "Loss of appetite" },
       { id: "constipation",       label: "Constipation" },
       { id: "increased_hunger",   label: "Increased hunger / never satisfied" }
@@ -307,7 +456,9 @@ const SYMPTOM_GROUPS = [
       { id: "frequent_urination", label: "Frequent urination" },
       { id: "burning_urination",  label: "Burning / painful urination" },
       { id: "cloudy_urine",       label: "Cloudy / dark urine" },
+      { id: "dark_urine",          label: "Dark urine (tea-colored)" },
       { id: "blood_in_urine",     label: "Blood in urine" },
+      { id: "flank_pain",          label: "Flank / side pain" },
       { id: "pelvic_pain",        label: "Pelvic pain" }
     ]
   },
@@ -318,6 +469,8 @@ const SYMPTOM_GROUPS = [
       { id: "weight_loss",      label: "Unexplained weight loss" },
       { id: "dehydration",      label: "Signs of dehydration (dry mouth, sunken eyes)" },
       { id: "rapid_heartbeat",  label: "Rapid heartbeat / palpitations" },
+      { id: "high_blood_pressure",label:"Known high blood pressure reading" },
+      { id: "leg_swelling",      label: "Leg / ankle swelling" },
       { id: "cold_hands",       label: "Cold hands & feet" },
       { id: "numbness",         label: "Numbness / tingling in hands/feet" },
       { id: "slow_healing",     label: "Wounds healing slowly" },

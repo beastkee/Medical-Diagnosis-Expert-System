@@ -36,6 +36,118 @@ const CHRONIC_CONDITIONS = [
 ];
 
 // ================================================================
+//  CONTEXT WARNINGS (pregnancy / pediatric / elderly / lactation)
+// ================================================================
+const DISEASE_CONTEXT_WARNINGS = {
+  default: {
+    pediatrics: [
+      { level: 'moderate', text: 'Paediatric safety: use weight-based dosing only and reassess hydration frequently.' }
+    ],
+    pregnancy: [
+      { level: 'moderate', text: 'Pregnancy safety: verify maternal-fetal medication safety before treatment.' }
+    ],
+    lactation: [
+      { level: 'mild', text: 'Breastfeeding caution: confirm compatibility of medicines with lactation.' }
+    ],
+    elderly: [
+      { level: 'moderate', text: 'Elderly caution: higher adverse-effect risk; start low and monitor closely.' }
+    ]
+  },
+  malaria: {
+    pregnancy: [
+      { level: 'urgent', text: 'Pregnancy warning: malaria in pregnancy can rapidly become severe; urgent supervised treatment is required.' }
+    ],
+    pediatrics: [
+      { level: 'urgent', text: 'Paediatric warning: children can decompensate quickly with malaria; monitor for dehydration and altered consciousness.' }
+    ]
+  },
+  pneumonia: {
+    pregnancy: [
+      { level: 'urgent', text: 'Pregnancy warning: respiratory compromise threatens both mother and fetus; maintain low threshold for referral.' }
+    ],
+    pediatrics: [
+      { level: 'urgent', text: 'Paediatric warning: rapid breathing/chest indrawing are red flags; urgent care is needed.' }
+    ],
+    elderly: [
+      { level: 'urgent', text: 'Elderly warning: higher risk of hypoxia and sepsis; early escalation is recommended.' }
+    ]
+  },
+  dengue: {
+    pregnancy: [
+      { level: 'urgent', text: 'Pregnancy warning: monitor closely for bleeding and shock signs; avoid NSAIDs unless clinically advised.' }
+    ]
+  },
+  uti: {
+    pregnancy: [
+      { level: 'urgent', text: 'Pregnancy warning: untreated UTI may progress to pyelonephritis and obstetric complications; treat promptly.' }
+    ]
+  },
+  appendicitis: {
+    pregnancy: [
+      { level: 'urgent', text: 'Pregnancy warning: abdominal findings may be atypical; urgent surgical review is required.' }
+    ],
+    pediatrics: [
+      { level: 'urgent', text: 'Paediatric warning: perforation risk is higher with delay; urgent referral is required.' }
+    ]
+  },
+  asthma_exacerbation: {
+    pregnancy: [
+      { level: 'urgent', text: 'Pregnancy warning: uncontrolled asthma reduces fetal oxygenation; prioritize rapid stabilization.' }
+    ],
+    pediatrics: [
+      { level: 'moderate', text: 'Paediatric caution: do not use adult inhaler doses; use age/weight-appropriate protocols.' }
+    ]
+  },
+  hypertension: {
+    pregnancy: [
+      { level: 'urgent', text: 'Pregnancy warning: consider hypertensive disorders of pregnancy (e.g., preeclampsia); urgent obstetric review if severe symptoms.' }
+    ],
+    elderly: [
+      { level: 'moderate', text: 'Elderly caution: avoid over-aggressive BP reduction to reduce fall and perfusion risk.' }
+    ]
+  },
+  diabetes: {
+    pregnancy: [
+      { level: 'moderate', text: 'Pregnancy caution: evaluate for gestational diabetes pathways and tighter glucose targets.' }
+    ],
+    pediatrics: [
+      { level: 'moderate', text: 'Paediatric caution: assess for type 1 diabetes and diabetic ketoacidosis red flags.' }
+    ]
+  }
+};
+
+function getPatientContextGroups() {
+  const category = (document.getElementById('cat-select') || {}).value || '';
+  return {
+    isPediatric: ['neonate', 'infant', 'child', 'adolescent'].includes(category),
+    isElderly: category === 'elderly',
+    isPregnant: !!patFlags.pregnant || category === 'pregnant',
+    isLactating: !!patFlags.lactating || category === 'lactating'
+  };
+}
+
+function getDiseaseWarnings(diseaseId) {
+  const ctx = getPatientContextGroups();
+  const byDisease = DISEASE_CONTEXT_WARNINGS[diseaseId] || {};
+  const byDefault = DISEASE_CONTEXT_WARNINGS.default;
+  let items = [];
+
+  if (ctx.isPregnant) {
+    items = items.concat(byDisease.pregnancy || byDefault.pregnancy || []);
+  }
+  if (ctx.isLactating) {
+    items = items.concat(byDisease.lactation || byDefault.lactation || []);
+  }
+  if (ctx.isPediatric) {
+    items = items.concat(byDisease.pediatrics || byDefault.pediatrics || []);
+  }
+  if (ctx.isElderly) {
+    items = items.concat(byDisease.elderly || byDefault.elderly || []);
+  }
+  return items;
+}
+
+// ================================================================
 //  FIRST AID data
 // ================================================================
 const FA_TYPES = [
@@ -435,7 +547,12 @@ function runDx() {
     return;
   }
   const allIds = Array.from(selectedSymptoms).concat(customSymptoms.map(function(c) { return c.id; }));
-  lastResults  = runInferenceEngine(allIds);
+  const category = (document.getElementById('cat-select') || {}).value || '';
+  lastResults  = runInferenceEngine(allIds, {
+    category: category,
+    flags: Object.assign({}, patFlags),
+    chronic: Array.from(chronicSelected)
+  });
   testResults  = {};
   renderResults(lastResults);
   goStep(3);
@@ -477,6 +594,7 @@ function renderResults(results) {
     const pct = Math.round(r.confidence * 100);
     const sev = r.disease.severity;
     const isPrimary = i === 0;
+    const ctxWarnings = getDiseaseWarnings(r.disease.id);
     html += '<div class="diag-card ' + (isPrimary ? 'diag-primary' : 'diag-secondary') + '">' +
       '<div class="diag-rank">' + (rankLabel[i] || 'Possible') + ' \u00B7 <span style="color:' + sevColor[sev] + '">' + sev.charAt(0).toUpperCase() + sev.slice(1) + ' severity</span></div>' +
       '<div class="diag-name">' + r.disease.name + '</div>' +
@@ -487,6 +605,10 @@ function renderResults(results) {
       r.supMatched.map(function(s) { return '<span class="match-chip">' + symLabel(s) + '</span>'; }).join('') +
       '</div>' +
       '<div style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:8px">' + r.disease.description + '</div>' +
+      (ctxWarnings.length ?
+        '<div class="ctx-warn"><div class="ctx-warn-h">Context Safety Notes</div>' +
+        ctxWarnings.map(function(w) { return '<div class="ctx-warn-i ctx-' + w.level + '">' + w.text + '</div>'; }).join('') +
+        '</div>' : '') +
       '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--hint);margin-bottom:4px">Recommended Tests</div>' +
       '<div style="font-size:12px;color:var(--muted)">' + r.disease.tests.map(function(t) { return '\u2022 ' + t; }).join('<br>') + '</div>' +
       '</div>';
